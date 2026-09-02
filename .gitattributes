@@ -1,0 +1,18 @@
+* text=auto
+*.sh text eol=lf
+*.py text eol=lf
+*.yml text eol=lf
+*.yaml text eol=lf
+*.md text eol=lf
+*.csv text eol=lf
+Makefile text eol=lf
+*.env text eol=lf
+*.env.example text eol=lf
+
+# Files consumed by Linux hosts must stay LF regardless of the checkout
+# platform. `text=auto` alone leaves these to chance: a systemd unit or a
+# shebang script with CRLF fails at runtime -- systemd mis-parses the value and
+# the kernel reports "bad interpreter: No such file or directory".
+*.service text eol=lf
+scripts/gateway/litellm-wait-ready text eol=lf
+scripts/fabric/dsv4-fabric-reconcile text eol=lf

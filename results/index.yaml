@@ -1,0 +1,13 @@
+# Provenance index for Qwen 3.8 Flash Next (~180B MoE) benchmark results
+meta:
+  generated: 2026-09-02
+  verified: 2026-09-02
+  cluster: "3x DGX Spark (GB10) switchless RoCE ring"
+  engine: "eugr/spark-vllm-b12x:latest"
+  severity_order:
+    - VOID-degraded-fabric
+    - VOID-25-token-window
+    - VOID-incomplete-run
+    - SUPERSEDED
+
+directories: []

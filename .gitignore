@@ -1,0 +1,17 @@
+__pycache__/
+*.pyc
+*.log
+.env
+config/*.env
+configs/*.env
+!configs/*.env.example
+artifacts/*/environment-unredacted.txt
+vendor/
+.venv/
+
+# Benchmark evidence under results/ is the whole point of this repo -- a summary
+# whose raw logs were gitignored is exactly the "stale pointer" failure in
+# docs/POSTMORTEM-2026-08-25.md. Keep raw run logs even though *.log is ignored.
+!results/**/*.log
+__pycache__/
+*.pyc
