@@ -1,13 +1,37 @@
-# Provenance index for Qwen 3.8 Flash Next (~180B MoE) benchmark results
 meta:
-  generated: 2026-09-02
-  verified: 2026-09-02
-  cluster: "3x DGX Spark (GB10) switchless RoCE ring"
-  engine: "eugr/spark-vllm-b12x:latest"
+  generated: '2026-09-02'
+  verified: '2026-09-02'
+  cluster: 3x DGX Spark (GB10) switchless RoCE ring
+  engine: eugr/spark-vllm-b12x:latest
   severity_order:
-    - VOID-degraded-fabric
-    - VOID-25-token-window
-    - VOID-incomplete-run
-    - SUPERSEDED
-
-directories: []
+  - VOID-degraded-fabric
+  - VOID-25-token-window
+  - VOID-incomplete-run
+  - SUPERSEDED
+directories:
+- dir: 20260902-tp3-mnbt8192
+  status: CURRENT
+  date: '2026-09-02'
+  model: RadixArk/Qwen3.8-Flash-Next-NVFP4
+  nodes: 3
+  tp_size: 3
+  fabric_gate: PRESENT-PASS
+  description: Qwen 3.8 Flash Next (~180B MoE) NVFP4 TP=3 mnbt=8192 with native MTP
+    draft model and HyperConnections
+  parameters:
+    max_model_len: 32768
+    max_num_batched_tokens: 8192
+    gpu_memory_utilization: 0.8
+    num_speculative_tokens: 1
+    kv_cache_dtype: fp8
+    moe_backend: b12x
+    attention_backend: flashinfer
+  metrics:
+    c1_tok_s: 40.3
+    c1_ttft_ms: 227
+    c4_tok_s: 32.3
+    c4_agg_tok_s: 111.4
+    c8_tok_s: 23.9
+    c8_agg_tok_s: 149.4
+    c16_tok_s: 18.0
+    c16_agg_tok_s: 192.5

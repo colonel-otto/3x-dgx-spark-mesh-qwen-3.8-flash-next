@@ -1,17 +1,17 @@
 #!/usr/bin/env bash
-# qwen-sweep.sh — benchmark Qwen 3.8 across concurrency grid c ∈ {1, 4, 8, 16}
+# qwen-next-sweep.sh — benchmark Qwen 3.8 Flash Next across concurrency grid c ∈ {1, 4, 8, 16}
 set -euo pipefail
 
 NODES_COUNT="${1:-3}"
 MNBT="${2:-8192}"
-OUT="${3:-$HOME/qwen-sweep-tp${NODES_COUNT}-mnbt${MNBT}}"
+OUT="${3:-$HOME/results-flash-next-tp${NODES_COUNT}}"
 
 BASE_URL="http://127.0.0.1:8100/v1"
-MODEL="qwen3.8-27b-nvfp4"
+MODEL=$(curl -s http://127.0.0.1:8100/v1/models | jq -r ".data[0].id // \"qwen3.8-flash-next-nvfp4\"")
 HARNESS="$HOME/bench-miaai.py"
 mkdir -p "$OUT"
 
-echo "=== Qwen Benchmark Sweep: nodes=$NODES_COUNT mnbt=$MNBT -> $OUT ==="
+echo "=== Qwen Flash Next Benchmark Sweep: model=$MODEL nodes=$NODES_COUNT mnbt=$MNBT -> $OUT ==="
 
 # Warmup
 echo "--- warmup ---"

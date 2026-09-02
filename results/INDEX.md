@@ -11,11 +11,11 @@ and diagnostic baseline values.
 
 | Item | Count |
 |---|---:|
-| Result bundles | 0 |
-| `CURRENT` | 0 |
+| Result bundles | 1 |
+| `CURRENT` | 1 |
 | `VOID` | 0 |
 | `SUPERSEDED` | 0 |
-| Own passing fabric gate | 0 |
+| Own passing fabric gate | 1 |
 | Gate absent | 0 |
 | Predates the gate | 0 |
 
@@ -27,6 +27,7 @@ quality evidence or a methodology-only control.
 
 | Bundle | Date | Nodes / TP | Gate | Description |
 |---|---|---|---|---|
+| [20260902-tp3-mnbt8192](20260902-tp3-mnbt8192/) | 2026-09-02 | 3 / 3 | `PRESENT-PASS` | Qwen 3.8 Flash Next (~180B MoE) NVFP4 TP=3 mnbt=8192 with native MTP draft model and HyperConnections |
 
 ## Superseded evidence
 

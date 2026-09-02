@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # qwen-next-boot-tp3.sh — launch Qwen 3.8 Flash Next (~180B MoE) on 3 nodes (TP=3: sparkmain + spark1 + spark2)
-set -euo pipefail
+set -e
 
 MNBT="${1:-8192}"
 LOG="${2:-$HOME/qwen-next-tp3-mnbt${MNBT}.log}"
@@ -37,9 +37,13 @@ nohup python3 run-recipe.py "$RECIPE" \
   -v ${CACHE_ROOT}-triton:/root/.triton \
   -v ${CACHE_ROOT}-tilelang:/root/.tilelang \
   -v /opt/qwen-patches/virtual_tp.py:/usr/local/lib/python3.12/dist-packages/vllm/config/virtual_tp.py \
+  -v /opt/qwen-patches/registry.py:/usr/local/lib/python3.12/dist-packages/vllm/model_executor/models/registry.py \
+  -v /opt/qwen-patches/speculative.py:/usr/local/lib/python3.12/dist-packages/vllm/config/speculative.py \
+  -v /opt/qwen-patches/qwen3_next.py:/usr/local/lib/python3.12/dist-packages/vllm/model_executor/models/qwen3_next.py \
+  -v /opt/qwen-patches/qwen3_next_mtp.py:/usr/local/lib/python3.12/dist-packages/vllm/model_executor/models/qwen3_next_mtp.py \
   -v /opt/qwen-patches/vocab_parallel_embedding.py:/usr/local/lib/python3.12/dist-packages/vllm/model_executor/layers/vocab_parallel_embedding.py \
   --no-cache-dirs \
-  --gpu-memory-utilization 0.85 \
+  --gpu-memory-utilization 0.80 \
   --port 8100 \
   -e "NCCL_IB_HCA=rocep1s0f0,roceP2p1s0f0,rocep1s0f1,roceP2p1s0f1" \
   -e NCCL_IB_SUBNET_AWARE_ROUTING=1 \

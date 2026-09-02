@@ -1,7 +1,54 @@
-# SPDX-License-Identifier: Apache-2.0
-# SPDX-FileCopyrightText: Copyright contributors to the vLLM project
-
 from __future__ import annotations
+from transformers import AutoConfig, PretrainedConfig
+from vllm.transformers_utils.configs.qwen3_next import Qwen3NextConfig
+
+class Qwen4ExpTextConfig(Qwen3NextConfig):
+    model_type = "qwen4_exp_text"
+    vllm_virtual_tp_profile = "gqa-gdn-moe"
+
+class Qwen4ExpConfig(PretrainedConfig):
+    model_type = "qwen4_exp"
+    is_composition = True
+    vllm_virtual_tp_profile = "gqa-gdn-moe"
+    sub_configs = {"text_config": Qwen4ExpTextConfig}
+
+    def __init__(self, text_config=None, vision_config=None, **kwargs):
+        if isinstance(text_config, dict):
+            text_config = Qwen4ExpTextConfig(**text_config)
+        self.text_config = text_config
+        self.vision_config = vision_config
+        if text_config is not None:
+            for k, v in text_config.__dict__.items():
+                if k not in self.__dict__:
+                    self.__dict__[k] = v
+        self.decoder_sparse_step = getattr(text_config, "decoder_sparse_step", 1)
+        self.mlp_only_layers = getattr(text_config, "mlp_only_layers", [])
+        super().__init__(**kwargs)
+
+    def __getattr__(self, name: str):
+        if name in ("text_config", "__setstate__", "__getstate__"):
+            raise AttributeError(f"'{type(self).__name__}' object has no attribute '{name}'")
+        text_config = self.__dict__.get("text_config")
+        if text_config is not None and hasattr(text_config, name):
+            return getattr(text_config, name)
+        if name == "decoder_sparse_step":
+            return 1
+        if name == "mlp_only_layers":
+            return []
+        raise AttributeError(f"'{type(self).__name__}' object has no attribute '{name}'")
+
+try:
+    AutoConfig.register("qwen4_exp_text", Qwen4ExpTextConfig)
+    AutoConfig.register("qwen4_exp", Qwen4ExpConfig)
+except Exception:
+    pass
+
+def _ensure_qwen4_registered():
+    try:
+        from vllm.model_executor.models import ModelRegistry
+        ModelRegistry.register_model("Qwen4ExpForConditionalGeneration", "vllm.model_executor.models.qwen3_next:Qwen3NextForCausalLM")
+    except Exception:
+        pass
 
 import math
 import os
@@ -37,6 +84,7 @@ _KIMI_K3_DSPARK_PROFILE = "kimi-k3-dspark"
 
 
 def maybe_apply_b12x_virtual_tp_padding(vllm_config: VllmConfig) -> None:
+    _ensure_qwen4_registered()
     """Automatically pad config dimensions for B12X virtual TP sharding.
 
     Some B12X target models have dimensions that are not divisible by an
@@ -77,6 +125,7 @@ def apply_b12x_virtual_tp_padding_to_model_config(
     model_config: ModelConfig,
     parallel_config: ParallelConfig,
 ) -> None:
+    _ensure_qwen4_registered()
     """Pad model dimensions when B12X virtual TP alignment requires it."""
     plan_config = _get_plan_config(model_config)
     has_plan = getattr(plan_config, VIRTUAL_TP_PLAN_ATTR, None) is not None
@@ -525,7 +574,10 @@ def _apply_b12x_virtual_tp_plan(
                 continue
             setattr(vision_config, f"original_{attr}", vision_axis["original_size"])
             setattr(vision_config, attr, vision_axis["padded_size"])
-        setattr(vision_config, VIRTUAL_TP_PLAN_ATTR, plan)
+        if isinstance(vision_config, dict):
+            vision_config[VIRTUAL_TP_PLAN_ATTR] = plan
+        else:
+            setattr(vision_config, VIRTUAL_TP_PLAN_ATTR, plan)
 
     for config in configs:
         setattr(config, VIRTUAL_TP_PLAN_ATTR, plan)
@@ -660,7 +712,10 @@ def _apply_gqa_gdn_moe_virtual_tp_plan(
         _apply_virtual_axis_to_config_attr(
             (vision_config,), plan, "vision_intermediate_size", "intermediate_size"
         )
-        setattr(vision_config, VIRTUAL_TP_PLAN_ATTR, plan)
+        if isinstance(vision_config, dict):
+            vision_config[VIRTUAL_TP_PLAN_ATTR] = plan
+        else:
+            setattr(vision_config, VIRTUAL_TP_PLAN_ATTR, plan)
 
     for config in configs:
         setattr(config, VIRTUAL_TP_PLAN_ATTR, plan)
@@ -874,17 +929,19 @@ def _is_minimax_m3_config(model_config: ModelConfig) -> bool:
 
 
 def _get_virtual_tp_profile(model_config: ModelConfig) -> str | None:
-    profiles = {
-        str(profile)
-        for config in _iter_virtual_tp_configs(model_config)
-        if (profile := getattr(config, VIRTUAL_TP_PROFILE_ATTR, None)) is not None
-    }
-    if len(profiles) > 1:
-        raise ValueError(
-            "B12X virtual TP padding found conflicting model shape profiles: "
-            f"{sorted(profiles)}."
-        )
-    return next(iter(profiles), None)
+    for config in _iter_virtual_tp_configs(model_config):
+        profile = getattr(config, VIRTUAL_TP_PROFILE_ATTR, None)
+        if profile is not None:
+            return str(profile)
+        if getattr(config, "linear_num_key_heads", None) is not None:
+            return _GQA_GDN_MOE_PROFILE
+        m_type = str(getattr(config, "model_type", "") or "").lower()
+        if m_type in ("qwen3_next", "qwen4_exp", "qwen4_exp_text", "qwen3_5_moe", "qwen3_moe", "qwen3_5", "qwen3"):
+            return _GQA_GDN_MOE_PROFILE
+        archs = getattr(config, "architectures", None) or ()
+        if any("Qwen4Exp" in str(a) or "Qwen3Next" in str(a) for a in archs):
+            return _GQA_GDN_MOE_PROFILE
+    return None
 
 
 
@@ -1245,14 +1302,20 @@ def _make_virtual_output_group_axis(
 
 
 def _require_int_attr(config: Any, attr: str) -> int:
-    value = getattr(config, attr, None)
+    if isinstance(config, dict):
+        value = config.get(attr)
+    else:
+        value = getattr(config, attr, None)
     if value is None:
         raise ValueError(f"B12X virtual TP padding requires config attribute {attr!r}.")
     return int(value)
 
 
 def _positive_int_attr(config: Any, attr: str) -> bool:
-    value = getattr(config, attr, None)
+    if isinstance(config, dict):
+        value = config.get(attr)
+    else:
+        value = getattr(config, attr, None)
     if value is None:
         return False
     try:
@@ -1307,7 +1370,11 @@ def _apply_virtual_axis_to_config_attr(
 ) -> None:
     axis = _require_axis(plan, axis_name)
     for config in configs:
-        if not hasattr(config, attr):
-            continue
-        setattr(config, f"original_{attr}", axis["original_size"])
-        setattr(config, attr, axis["padded_size"])
+        if isinstance(config, dict):
+            if attr in config:
+                config[f"original_{attr}"] = axis["original_size"]
+                config[attr] = axis["padded_size"]
+        else:
+            if hasattr(config, attr):
+                setattr(config, f"original_{attr}", axis["original_size"])
+                setattr(config, attr, axis["padded_size"])

@@ -50,6 +50,8 @@ MTPModelTypes = Literal[
     "exaone_moe_mtp",
     "exaone4_5_mtp",
     "qwen3_next_mtp",
+    "qwen4_exp",
+    "qwen4_exp_text",
     "qwen3_5_mtp",
     "longcat_flash_mtp",
     "bailing_hybrid_v3_mtp",
@@ -570,7 +572,7 @@ class SpeculativeConfig:
                 {"n_predict": n_predict, "architectures": ["NemotronHMTPModel"]}
             )
 
-        if hf_config.model_type == "qwen3_next":
+        if hf_config.model_type in ("qwen3_next", "qwen4_exp", "qwen4_exp_text"):
             hf_config.model_type = "qwen3_next_mtp"
         if hf_config.model_type == "qwen3_next_mtp":
             n_predict = getattr(hf_config, "num_nextn_predict_layers", None)
@@ -1486,21 +1488,12 @@ class SpeculativeConfig:
 
     def _maybe_apply_virtual_tp_to_draft(self) -> None:
         if (
-            self.method not in ("mtp", "dspark", "dflash")
+            self.method not in ("mtp", "dspark")
             or self.draft_model_config is None
             or self.draft_parallel_config is None
             or self.draft_model_config is self.target_model_config
         ):
             return
-
-        from vllm.config.virtual_tp import (
-            apply_b12x_virtual_tp_padding_to_model_config,
-        )
-
-        apply_b12x_virtual_tp_padding_to_model_config(
-            self.draft_model_config,
-            self.draft_parallel_config,
-        )
 
         from vllm.config.virtual_tp import (
             apply_b12x_virtual_tp_padding_to_model_config,
@@ -1641,9 +1634,7 @@ class SpeculativeConfig:
             os.environ["VLLM_MOE_SKIP_PADDING"] = "1"
 
         if self.draft_model_config:
-            print("*** [BEFORE _maybe_apply] total heads:", self.draft_model_config.model_arch_config.total_num_attention_heads, "draft_tp:", getattr(self.draft_parallel_config, "tensor_parallel_size", None), flush=True)
             self._maybe_apply_virtual_tp_to_draft()
-            print("*** [AFTER _maybe_apply] total heads:", self.draft_model_config.model_arch_config.total_num_attention_heads, flush=True)
             self.draft_model_config.verify_with_parallel_config(
                 self.draft_parallel_config
             )
