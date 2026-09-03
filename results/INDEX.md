@@ -11,12 +11,12 @@ and diagnostic baseline values.
 
 | Item | Count |
 |---|---:|
-| Result bundles | 1 |
-| `CURRENT` | 1 |
+| Result bundles | 2 |
+| `CURRENT` | 2 |
 | `VOID` | 0 |
 | `SUPERSEDED` | 0 |
 | Own passing fabric gate | 1 |
-| Gate absent | 0 |
+| Gate absent | 1 |
 | Predates the gate | 0 |
 
 `CURRENT` means useful within the caveats recorded for that bundle. An absent
@@ -28,6 +28,7 @@ quality evidence or a methodology-only control.
 | Bundle | Date | Nodes / TP | Gate | Description |
 |---|---|---|---|---|
 | [20260902-tp3-mnbt8192](20260902-tp3-mnbt8192/) | 2026-09-02 | 3 / 3 | `PRESENT-PASS` | Qwen 3.8 Flash Next (~180B MoE) NVFP4 TP=3 mnbt=8192 with native MTP draft model and HyperConnections |
+| [20260903T2153Z-qwen3.8-flash-next-tp3-mnbt8192-256tok](20260903T2153Z-qwen3.8-flash-next-tp3-mnbt8192-256tok/) | 2026-09-03 | 3 / 3 | `ABSENT` | 3-Node TP=3 Qwen 3.8 Flash Next (~180B MoE) re-run with long context (max_model_len 32768->262144), gpu-memory-utilization 0.80->0.82, and a new kernel_warmup.py patch mount. First sweep in this repo run against a policy-compliant harness: BENCHMARK-POLICY.md ported from the dense-model repo, bench-miaai.py's silent 128-token default replaced with an explicit --output-tokens 256 + WindowCollapse assertion, and exclusivity.py wired in to assert no foreign traffic touched the engine during the sweep. A first attempt failed its own exclusivity check (10 "foreign" requests) -- traced to a counting bug in qwen-next-sweep.sh (warmup requests not added to the expected total), fixed, and re-run clean (EXCLUSIVITY_PASS delta=155 expected=155). The failed run's numbers matched this clean re-run closely, but only the verified run is published per policy. |
 
 ## Superseded evidence
 

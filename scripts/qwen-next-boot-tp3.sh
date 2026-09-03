@@ -42,8 +42,9 @@ nohup python3 run-recipe.py "$RECIPE" \
   -v /opt/qwen-patches/qwen3_next.py:/usr/local/lib/python3.12/dist-packages/vllm/model_executor/models/qwen3_next.py \
   -v /opt/qwen-patches/qwen3_next_mtp.py:/usr/local/lib/python3.12/dist-packages/vllm/model_executor/models/qwen3_next_mtp.py \
   -v /opt/qwen-patches/vocab_parallel_embedding.py:/usr/local/lib/python3.12/dist-packages/vllm/model_executor/layers/vocab_parallel_embedding.py \
+  -v /opt/qwen-patches/kernel_warmup.py:/usr/local/lib/python3.12/dist-packages/vllm/model_executor/warmup/kernel_warmup.py \
   --no-cache-dirs \
-  --gpu-memory-utilization 0.80 \
+  --gpu-memory-utilization 0.82 \
   --port 8100 \
   -e "NCCL_IB_HCA=rocep1s0f0,roceP2p1s0f0,rocep1s0f1,roceP2p1s0f1" \
   -e NCCL_IB_SUBNET_AWARE_ROUTING=1 \

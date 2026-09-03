@@ -35,3 +35,78 @@ directories:
     c8_agg_tok_s: 149.4
     c16_tok_s: 18.0
     c16_agg_tok_s: 192.5
+  caveats: >
+    output_tokens_actual was never recorded here -- no flag existed in the
+    harness at the time to set it, so this almost certainly used the
+    harness's silent 128-token default. NOT directly comparable to
+    20260903T2153Z-qwen3.8-flash-next-tp3-mnbt8192-256tok, which explicitly
+    forces 256 tokens. See docs/BENCHMARK-POLICY.md (ported 2026-09-03).
+
+- dir: 20260903T2153Z-qwen3.8-flash-next-tp3-mnbt8192-256tok
+  status: CURRENT
+  date: '2026-09-03'
+  model: RadixArk/Qwen3.8-Flash-Next-NVFP4
+  nodes: 3
+  tp_size: 3
+  fabric_gate: ABSENT
+  exclusivity_gate: PRESENT-PASS
+  description: >
+    3-Node TP=3 Qwen 3.8 Flash Next (~180B MoE) re-run with long context
+    (max_model_len 32768->262144), gpu-memory-utilization 0.80->0.82, and a
+    new kernel_warmup.py patch mount. First sweep in this repo run against a
+    policy-compliant harness: BENCHMARK-POLICY.md ported from the
+    dense-model repo, bench-miaai.py's silent 128-token default replaced
+    with an explicit --output-tokens 256 + WindowCollapse assertion, and
+    exclusivity.py wired in to assert no foreign traffic touched the engine
+    during the sweep. A first attempt failed its own exclusivity check (10
+    "foreign" requests) -- traced to a counting bug in qwen-next-sweep.sh
+    (warmup requests not added to the expected total), fixed, and re-run
+    clean (EXCLUSIVITY_PASS delta=155 expected=155). The failed run's
+    numbers matched this clean re-run closely, but only the verified run is
+    published per policy.
+  parameters:
+    max_model_len: 262144
+    max_num_batched_tokens: 8192
+    gpu_memory_utilization: 0.82
+    num_speculative_tokens: 1
+    kv_cache_dtype: fp8
+    moe_backend: b12x
+    attention_backend: flashinfer
+    output_tokens_requested: 256
+    output_tokens_actual: 256
+    reps: 5
+    reps_verified: false
+    statistic: median
+  harness: qwen-next-sweep.sh
+  harness_committed: true
+  raw_data_committed: true
+  raw_files: [bench-c1.log, bench-c4.log, bench-c8.log, bench-c16.log, warmup-c1.log, warmup-c4.log, rows.tsv, exclusivity.json, gate.log]
+  has_readme: true
+  metrics:
+    c1_tok_s: 40.9
+    c1_ttft_ms: 220
+    c1_agg_tok_s: 39.5
+    c1_decode_min: 38.1
+    c1_decode_max: 41.9
+    c4_tok_s: 30.8
+    c4_ttft_ms: 600
+    c4_agg_tok_s: 113.6
+    c4_decode_min: 29.9
+    c4_decode_max: 31.4
+    c8_tok_s: 25.8
+    c8_ttft_ms: 912
+    c8_agg_tok_s: 185.0
+    c8_decode_min: 25.4
+    c8_decode_max: 26.3
+    c16_tok_s: 20.2
+    c16_ttft_ms: 1631
+    c16_agg_tok_s: 279.8
+    c16_decode_min: 20.1
+    c16_decode_max: 20.3
+  caveats: >
+    No TP=2 counterpart at this window/config exists yet in this repo --
+    qwen-next-boot-tp2.sh deliberately kept the old 32K/0.80 settings, this
+    re-run's scope was TP=3 only. Single sweep, not yet repeat-day
+    confirmed. Fabric gate not yet ported to this repo (policy requirement 1
+    still open) -- exclusivity is the only cross-run integrity check
+    currently wired in.

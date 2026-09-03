@@ -1,0 +1,13 @@
+=== Qwen Flash Next Validation Battery ===
+== 1. Models Endpoint ==
+PASS  models endpoint serves qwen3.8-flash-next-nvfp4
+== 2. Core Reasoning & Correctness ==
+PASS  capital lookup (Paris)
+PASS  17 x 23 = 391
+PASS  logical deduction (No)
+== 3. Needle In Haystack Retrieval ==
+PASS  needle ~1.5k tok (OPAL-4482)
+== 4. Text Quality & Degeneration Check ==
+PASS  no degeneration (unique-word ratio: 0.722)
+
+=== Result: ALL ACCEPTANCE TESTS PASSED ===
