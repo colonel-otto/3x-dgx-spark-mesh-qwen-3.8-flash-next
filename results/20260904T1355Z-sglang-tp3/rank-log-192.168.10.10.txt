@@ -1,0 +1,400 @@
+[2026-09-04 14:05:25] INFO:     127.0.0.1:34236 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-09-04 14:05:25] INFO:     192.168.10.22:53036 - "GET /metrics HTTP/1.1" 200 OK
+[2026-09-04 14:05:26 TP0] Decode batch, #running-req: 1, #full token: 448, full token usage: 0.00, mamba num: 1, mamba usage: 0.01, accept len: 3.75, accept rate: 0.92, cuda graph: True, gen throughput (token/s): 40.07, #queue-req: 0
+[2026-09-04 14:05:28] INFO:     127.0.0.1:34246 - "POST /tokenize HTTP/1.1" 200 OK
+[2026-09-04 14:05:29 TP0] Prefill batch, #new-seq: 1, #new-token: 320, #cached-token: 0, full token usage: 0.00, mamba usage: 0.01, #running-req: 0, #queue-req: 0, #pending-token: 0, cuda graph: False, input throughput (token/s): 88.32
+[2026-09-04 14:05:29] INFO:     127.0.0.1:34262 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-09-04 14:05:29 TP0] Decode batch, #running-req: 1, #full token: 320, full token usage: 0.00, mamba num: 1, mamba usage: 0.01, accept len: 3.65, accept rate: 0.88, cuda graph: True, gen throughput (token/s): 66.68, #queue-req: 0
+[2026-09-04 14:05:30] INFO:     192.168.10.22:40974 - "GET /metrics HTTP/1.1" 200 OK
+[2026-09-04 14:05:31 TP0] Decode batch, #running-req: 1, #full token: 512, full token usage: 0.00, mamba num: 1, mamba usage: 0.01, accept len: 3.92, accept rate: 0.97, cuda graph: True, gen throughput (token/s): 77.05, #queue-req: 0
+[2026-09-04 14:05:32] INFO:     127.0.0.1:34278 - "POST /tokenize HTTP/1.1" 200 OK
+[2026-09-04 14:05:32 TP0] Prefill batch, #new-seq: 1, #new-token: 320, #cached-token: 0, full token usage: 0.00, mamba usage: 0.01, #running-req: 0, #queue-req: 0, #pending-token: 0, cuda graph: False, input throughput (token/s): 87.84
+[2026-09-04 14:05:32] INFO:     127.0.0.1:34284 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-09-04 14:05:33 TP0] Decode batch, #running-req: 1, #full token: 384, full token usage: 0.00, mamba num: 1, mamba usage: 0.01, accept len: 3.80, accept rate: 0.93, cuda graph: True, gen throughput (token/s): 69.08, #queue-req: 0
+[2026-09-04 14:05:35 TP0] Decode batch, #running-req: 1, #full token: 512, full token usage: 0.00, mamba num: 1, mamba usage: 0.01, accept len: 3.80, accept rate: 0.93, cuda graph: True, gen throughput (token/s): 76.82, #queue-req: 0
+[2026-09-04 14:05:35] INFO:     192.168.10.22:39740 - "GET /metrics HTTP/1.1" 200 OK
+[2026-09-04 14:05:36] INFO:     127.0.0.1:46926 - "POST /tokenize HTTP/1.1" 200 OK
+[2026-09-04 14:05:36 TP0] Prefill batch, #new-seq: 1, #new-token: 320, #cached-token: 0, full token usage: 0.00, mamba usage: 0.01, #running-req: 0, #queue-req: 0, #pending-token: 0, cuda graph: False, input throughput (token/s): 86.88
+[2026-09-04 14:05:36] INFO:     127.0.0.1:46942 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-09-04 14:05:37 TP0] Decode batch, #running-req: 1, #full token: 448, full token usage: 0.00, mamba num: 1, mamba usage: 0.01, accept len: 3.62, accept rate: 0.88, cuda graph: True, gen throughput (token/s): 65.77, #queue-req: 0
+[2026-09-04 14:05:39 TP0] Decode batch, #running-req: 1, #full token: 576, full token usage: 0.00, mamba num: 1, mamba usage: 0.01, accept len: 3.58, accept rate: 0.86, cuda graph: True, gen throughput (token/s): 72.25, #queue-req: 0
+[2026-09-04 14:05:39] INFO:     127.0.0.1:46948 - "POST /tokenize HTTP/1.1" 200 OK
+[2026-09-04 14:05:40 TP0] Prefill batch, #new-seq: 1, #new-token: 320, #cached-token: 0, full token usage: 0.00, mamba usage: 0.01, #running-req: 0, #queue-req: 0, #pending-token: 0, cuda graph: False, input throughput (token/s): 85.64
+[2026-09-04 14:05:40] INFO:     127.0.0.1:46958 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-09-04 14:05:40] INFO:     192.168.10.22:39756 - "GET /metrics HTTP/1.1" 200 OK
+[2026-09-04 14:05:41 TP0] Decode batch, #running-req: 1, #full token: 448, full token usage: 0.00, mamba num: 1, mamba usage: 0.01, accept len: 3.70, accept rate: 0.90, cuda graph: True, gen throughput (token/s): 67.22, #queue-req: 0
+[2026-09-04 14:05:43] INFO:     127.0.0.1:46972 - "POST /tokenize HTTP/1.1" 200 OK
+[2026-09-04 14:05:43] INFO:     127.0.0.1:46984 - "POST /tokenize HTTP/1.1" 200 OK
+[2026-09-04 14:05:43] INFO:     127.0.0.1:46994 - "POST /tokenize HTTP/1.1" 200 OK
+[2026-09-04 14:05:43] INFO:     127.0.0.1:47002 - "POST /tokenize HTTP/1.1" 200 OK
+[2026-09-04 14:05:44 TP0] Prefill batch, #new-seq: 1, #new-token: 320, #cached-token: 0, full token usage: 0.00, mamba usage: 0.04, #running-req: 0, #queue-req: 0, #pending-token: 0, cuda graph: False, input throughput (token/s): 78.15
+[2026-09-04 14:05:44] INFO:     127.0.0.1:47004 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-09-04 14:05:44 TP0] Prefill batch, #new-seq: 3, #new-token: 960, #cached-token: 0, full token usage: 0.00, mamba usage: 0.04, #running-req: 1, #queue-req: 0, #pending-token: 0, cuda graph: False, input throughput (token/s): 115810.05
+[2026-09-04 14:05:44] INFO:     127.0.0.1:47006 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-09-04 14:05:44] INFO:     127.0.0.1:47008 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-09-04 14:05:44] INFO:     127.0.0.1:47024 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-09-04 14:05:44 TP0] Decode batch, #running-req: 4, #full token: 1280, full token usage: 0.00, mamba num: 4, mamba usage: 0.04, accept len: 3.71, accept rate: 0.90, cuda graph: True, gen throughput (token/s): 67.63, #queue-req: 0
+[2026-09-04 14:05:45] INFO:     192.168.10.22:39756 - "GET /metrics HTTP/1.1" 200 OK
+[2026-09-04 14:05:47 TP0] Decode batch, #running-req: 4, #full token: 2048, full token usage: 0.00, mamba num: 4, mamba usage: 0.04, accept len: 3.82, accept rate: 0.94, cuda graph: True, gen throughput (token/s): 224.35, #queue-req: 0
+[2026-09-04 14:05:49] INFO:     127.0.0.1:57028 - "POST /tokenize HTTP/1.1" 200 OK
+[2026-09-04 14:05:49] INFO:     127.0.0.1:57018 - "POST /tokenize HTTP/1.1" 200 OK
+[2026-09-04 14:05:49] INFO:     127.0.0.1:57016 - "POST /tokenize HTTP/1.1" 200 OK
+[2026-09-04 14:05:49] INFO:     127.0.0.1:57030 - "POST /tokenize HTTP/1.1" 200 OK
+[2026-09-04 14:05:49 TP0] Prefill batch, #new-seq: 4, #new-token: 1280, #cached-token: 0, full token usage: 0.00, mamba usage: 0.04, #running-req: 0, #queue-req: 0, #pending-token: 0, cuda graph: False, input throughput (token/s): 230.36
+[2026-09-04 14:05:49] INFO:     127.0.0.1:57040 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-09-04 14:05:49] INFO:     127.0.0.1:57042 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-09-04 14:05:49] INFO:     127.0.0.1:57084 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-09-04 14:05:49] INFO:     127.0.0.1:57068 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-09-04 14:05:50 TP0] Decode batch, #running-req: 4, #full token: 1536, full token usage: 0.00, mamba num: 4, mamba usage: 0.04, accept len: 3.74, accept rate: 0.91, cuda graph: True, gen throughput (token/s): 173.23, #queue-req: 0
+[2026-09-04 14:05:50] INFO:     192.168.10.22:39756 - "GET /metrics HTTP/1.1" 200 OK
+[2026-09-04 14:05:52 TP0] Decode batch, #running-req: 4, #full token: 2048, full token usage: 0.00, mamba num: 4, mamba usage: 0.04, accept len: 3.70, accept rate: 0.90, cuda graph: True, gen throughput (token/s): 254.00, #queue-req: 0
+[2026-09-04 14:05:53] INFO:     127.0.0.1:57094 - "POST /tokenize HTTP/1.1" 200 OK
+[2026-09-04 14:05:53] INFO:     127.0.0.1:57098 - "POST /tokenize HTTP/1.1" 200 OK
+[2026-09-04 14:05:53] INFO:     127.0.0.1:57114 - "POST /tokenize HTTP/1.1" 200 OK
+[2026-09-04 14:05:53] INFO:     127.0.0.1:57128 - "POST /tokenize HTTP/1.1" 200 OK
+[2026-09-04 14:05:54 TP0] Prefill batch, #new-seq: 4, #new-token: 1280, #cached-token: 0, full token usage: 0.00, mamba usage: 0.04, #running-req: 0, #queue-req: 0, #pending-token: 0, cuda graph: False, input throughput (token/s): 286.39
+[2026-09-04 14:05:54] INFO:     127.0.0.1:57138 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-09-04 14:05:54] INFO:     127.0.0.1:57134 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-09-04 14:05:54] INFO:     127.0.0.1:57146 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-09-04 14:05:54] INFO:     127.0.0.1:57160 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-09-04 14:05:55 TP0] Decode batch, #running-req: 4, #full token: 1728, full token usage: 0.00, mamba num: 4, mamba usage: 0.04, accept len: 3.77, accept rate: 0.92, cuda graph: True, gen throughput (token/s): 214.37, #queue-req: 0
+[2026-09-04 14:05:55] INFO:     192.168.10.22:39756 - "GET /metrics HTTP/1.1" 200 OK
+[2026-09-04 14:05:58 TP0] Decode batch, #running-req: 4, #full token: 2304, full token usage: 0.00, mamba num: 4, mamba usage: 0.04, accept len: 3.71, accept rate: 0.90, cuda graph: True, gen throughput (token/s): 238.44, #queue-req: 0
+[2026-09-04 14:05:58] INFO:     127.0.0.1:40888 - "POST /tokenize HTTP/1.1" 200 OK
+[2026-09-04 14:05:58] INFO:     127.0.0.1:40898 - "POST /tokenize HTTP/1.1" 200 OK
+[2026-09-04 14:05:58] INFO:     127.0.0.1:40912 - "POST /tokenize HTTP/1.1" 200 OK
+[2026-09-04 14:05:58] INFO:     127.0.0.1:40916 - "POST /tokenize HTTP/1.1" 200 OK
+[2026-09-04 14:05:58 TP0] Prefill batch, #new-seq: 4, #new-token: 1280, #cached-token: 0, full token usage: 0.00, mamba usage: 0.04, #running-req: 0, #queue-req: 0, #pending-token: 0, cuda graph: False, input throughput (token/s): 269.63
+[2026-09-04 14:05:58] INFO:     127.0.0.1:40922 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-09-04 14:05:58] INFO:     127.0.0.1:40932 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-09-04 14:05:58] INFO:     127.0.0.1:40938 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-09-04 14:05:58] INFO:     127.0.0.1:40936 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-09-04 14:06:00] INFO:     192.168.10.22:41982 - "GET /metrics HTTP/1.1" 200 OK
+[2026-09-04 14:06:00 TP0] Decode batch, #running-req: 4, #full token: 1792, full token usage: 0.00, mamba num: 4, mamba usage: 0.04, accept len: 3.74, accept rate: 0.91, cuda graph: True, gen throughput (token/s): 203.07, #queue-req: 0
+[2026-09-04 14:06:03] INFO:     127.0.0.1:40954 - "POST /tokenize HTTP/1.1" 200 OK
+[2026-09-04 14:06:03] INFO:     127.0.0.1:40968 - "POST /tokenize HTTP/1.1" 200 OK
+[2026-09-04 14:06:03] INFO:     127.0.0.1:40982 - "POST /tokenize HTTP/1.1" 200 OK
+[2026-09-04 14:06:03] INFO:     127.0.0.1:40988 - "POST /tokenize HTTP/1.1" 200 OK
+[2026-09-04 14:06:03 TP0] Prefill batch, #new-seq: 4, #new-token: 1280, #cached-token: 0, full token usage: 0.00, mamba usage: 0.04, #running-req: 0, #queue-req: 0, #pending-token: 0, cuda graph: False, input throughput (token/s): 256.54
+[2026-09-04 14:06:03] INFO:     127.0.0.1:40996 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-09-04 14:06:03] INFO:     127.0.0.1:41010 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-09-04 14:06:03] INFO:     127.0.0.1:41026 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-09-04 14:06:03] INFO:     127.0.0.1:41034 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-09-04 14:06:04 TP0] Decode batch, #running-req: 4, #full token: 1280, full token usage: 0.00, mamba num: 4, mamba usage: 0.04, accept len: 3.73, accept rate: 0.91, cuda graph: True, gen throughput (token/s): 186.39, #queue-req: 0
+[2026-09-04 14:06:05] INFO:     192.168.10.22:41982 - "GET /metrics HTTP/1.1" 200 OK
+[2026-09-04 14:06:06 TP0] Decode batch, #running-req: 4, #full token: 2048, full token usage: 0.00, mamba num: 4, mamba usage: 0.04, accept len: 3.73, accept rate: 0.91, cuda graph: True, gen throughput (token/s): 242.00, #queue-req: 0
+[2026-09-04 14:06:08] INFO:     127.0.0.1:52252 - "POST /tokenize HTTP/1.1" 200 OK
+[2026-09-04 14:06:08] INFO:     127.0.0.1:52262 - "POST /tokenize HTTP/1.1" 200 OK
+[2026-09-04 14:06:08] INFO:     127.0.0.1:52272 - "POST /tokenize HTTP/1.1" 200 OK
+[2026-09-04 14:06:08] INFO:     127.0.0.1:52280 - "POST /tokenize HTTP/1.1" 200 OK
+[2026-09-04 14:06:08] INFO:     127.0.0.1:52292 - "POST /tokenize HTTP/1.1" 200 OK
+[2026-09-04 14:06:08] INFO:     127.0.0.1:52300 - "POST /tokenize HTTP/1.1" 200 OK
+[2026-09-04 14:06:08] INFO:     127.0.0.1:52304 - "POST /tokenize HTTP/1.1" 200 OK
+[2026-09-04 14:06:08] INFO:     127.0.0.1:52316 - "POST /tokenize HTTP/1.1" 200 OK
+[2026-09-04 14:06:10 TP0] Prefill batch, #new-seq: 1, #new-token: 320, #cached-token: 0, full token usage: 0.00, mamba usage: 0.08, #running-req: 0, #queue-req: 0, #pending-token: 0, cuda graph: False, input throughput (token/s): 50.05
+[2026-09-04 14:06:10] INFO:     127.0.0.1:52334 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-09-04 14:06:10 TP0] Prefill batch, #new-seq: 7, #new-token: 2240, #cached-token: 0, full token usage: 0.00, mamba usage: 0.08, #running-req: 1, #queue-req: 0, #pending-token: 0, cuda graph: False, input throughput (token/s): 15003.27
+[2026-09-04 14:06:10] INFO:     127.0.0.1:52326 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-09-04 14:06:10] INFO:     127.0.0.1:52348 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-09-04 14:06:10] INFO:     127.0.0.1:52358 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-09-04 14:06:10] INFO:     127.0.0.1:52366 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-09-04 14:06:10] INFO:     127.0.0.1:52378 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-09-04 14:06:10] INFO:     127.0.0.1:52380 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-09-04 14:06:10] INFO:     127.0.0.1:52390 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-09-04 14:06:10] INFO:     192.168.10.22:41982 - "GET /metrics HTTP/1.1" 200 OK
+[2026-09-04 14:06:11 TP0] Decode batch, #running-req: 8, #full token: 3072, full token usage: 0.01, mamba num: 8, mamba usage: 0.08, accept len: 3.58, accept rate: 0.86, cuda graph: True, gen throughput (token/s): 137.67, #queue-req: 0
+[2026-09-04 14:06:15 TP0] Decode batch, #running-req: 8, #full token: 4096, full token usage: 0.01, mamba num: 8, mamba usage: 0.08, accept len: 3.68, accept rate: 0.89, cuda graph: True, gen throughput (token/s): 291.30, #queue-req: 0
+[2026-09-04 14:06:15] INFO:     192.168.10.22:41982 - "GET /metrics HTTP/1.1" 200 OK
+[2026-09-04 14:06:17] INFO:     127.0.0.1:60974 - "POST /tokenize HTTP/1.1" 200 OK
+[2026-09-04 14:06:17] INFO:     127.0.0.1:60996 - "POST /tokenize HTTP/1.1" 200 OK
+[2026-09-04 14:06:17] INFO:     127.0.0.1:60982 - "POST /tokenize HTTP/1.1" 200 OK
+[2026-09-04 14:06:17] INFO:     127.0.0.1:60994 - "POST /tokenize HTTP/1.1" 200 OK
+[2026-09-04 14:06:17] INFO:     127.0.0.1:32780 - "POST /tokenize HTTP/1.1" 200 OK
+[2026-09-04 14:06:17] INFO:     127.0.0.1:32794 - "POST /tokenize HTTP/1.1" 200 OK
+[2026-09-04 14:06:17] INFO:     127.0.0.1:32796 - "POST /tokenize HTTP/1.1" 200 OK
+[2026-09-04 14:06:17] INFO:     127.0.0.1:32806 - "POST /tokenize HTTP/1.1" 200 OK
+[2026-09-04 14:06:19 TP0] Prefill batch, #new-seq: 8, #new-token: 2560, #cached-token: 0, full token usage: 0.00, mamba usage: 0.08, #running-req: 0, #queue-req: 0, #pending-token: 0, cuda graph: False, input throughput (token/s): 298.53
+[2026-09-04 14:06:19] INFO:     127.0.0.1:32818 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-09-04 14:06:19] INFO:     127.0.0.1:32820 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-09-04 14:06:19] INFO:     127.0.0.1:32832 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-09-04 14:06:19] INFO:     127.0.0.1:32840 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-09-04 14:06:19] INFO:     127.0.0.1:32850 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-09-04 14:06:19] INFO:     127.0.0.1:32862 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-09-04 14:06:19] INFO:     127.0.0.1:32852 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-09-04 14:06:19] INFO:     127.0.0.1:32868 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-09-04 14:06:20 TP0] Decode batch, #running-req: 8, #full token: 3072, full token usage: 0.01, mamba num: 8, mamba usage: 0.08, accept len: 3.70, accept rate: 0.90, cuda graph: True, gen throughput (token/s): 222.03, #queue-req: 0
+[2026-09-04 14:06:20] INFO:     192.168.10.22:49402 - "GET /metrics HTTP/1.1" 200 OK
+[2026-09-04 14:06:23 TP0] Decode batch, #running-req: 8, #full token: 4096, full token usage: 0.01, mamba num: 8, mamba usage: 0.08, accept len: 3.74, accept rate: 0.91, cuda graph: True, gen throughput (token/s): 386.04, #queue-req: 0
+[2026-09-04 14:06:24] INFO:     127.0.0.1:43164 - "POST /tokenize HTTP/1.1" 200 OK
+[2026-09-04 14:06:24] INFO:     127.0.0.1:43160 - "POST /tokenize HTTP/1.1" 200 OK
+[2026-09-04 14:06:24] INFO:     127.0.0.1:43146 - "POST /tokenize HTTP/1.1" 200 OK
+[2026-09-04 14:06:24] INFO:     127.0.0.1:43186 - "POST /tokenize HTTP/1.1" 200 OK
+[2026-09-04 14:06:24] INFO:     127.0.0.1:43190 - "POST /tokenize HTTP/1.1" 200 OK
+[2026-09-04 14:06:24] INFO:     127.0.0.1:43162 - "POST /tokenize HTTP/1.1" 200 OK
+[2026-09-04 14:06:24] INFO:     127.0.0.1:43202 - "POST /tokenize HTTP/1.1" 200 OK
+[2026-09-04 14:06:24] INFO:     127.0.0.1:43210 - "POST /tokenize HTTP/1.1" 200 OK
+[2026-09-04 14:06:25 TP0] Prefill batch, #new-seq: 8, #new-token: 2560, #cached-token: 0, full token usage: 0.00, mamba usage: 0.08, #running-req: 0, #queue-req: 0, #pending-token: 0, cuda graph: False, input throughput (token/s): 390.10
+[2026-09-04 14:06:25] INFO:     127.0.0.1:43230 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-09-04 14:06:25] INFO:     127.0.0.1:43220 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-09-04 14:06:25] INFO:     127.0.0.1:43218 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-09-04 14:06:25] INFO:     127.0.0.1:43232 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-09-04 14:06:25] INFO:     127.0.0.1:43248 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-09-04 14:06:25] INFO:     127.0.0.1:43254 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-09-04 14:06:25] INFO:     127.0.0.1:43258 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-09-04 14:06:25] INFO:     127.0.0.1:43266 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-09-04 14:06:25] INFO:     192.168.10.22:49402 - "GET /metrics HTTP/1.1" 200 OK
+[2026-09-04 14:06:27 TP0] Decode batch, #running-req: 8, #full token: 3072, full token usage: 0.01, mamba num: 8, mamba usage: 0.08, accept len: 3.70, accept rate: 0.90, cuda graph: True, gen throughput (token/s): 289.97, #queue-req: 0
+[2026-09-04 14:06:30 TP0] Decode batch, #running-req: 8, #full token: 4608, full token usage: 0.01, mamba num: 8, mamba usage: 0.08, accept len: 3.73, accept rate: 0.91, cuda graph: True, gen throughput (token/s): 368.94, #queue-req: 0
+[2026-09-04 14:06:30] INFO:     192.168.10.22:48678 - "GET /metrics HTTP/1.1" 200 OK
+[2026-09-04 14:06:31] INFO:     127.0.0.1:43268 - "POST /tokenize HTTP/1.1" 200 OK
+[2026-09-04 14:06:31] INFO:     127.0.0.1:43284 - "POST /tokenize HTTP/1.1" 200 OK
+[2026-09-04 14:06:31] INFO:     127.0.0.1:43286 - "POST /tokenize HTTP/1.1" 200 OK
+[2026-09-04 14:06:31] INFO:     127.0.0.1:43288 - "POST /tokenize HTTP/1.1" 200 OK
+[2026-09-04 14:06:31] INFO:     127.0.0.1:43300 - "POST /tokenize HTTP/1.1" 200 OK
+[2026-09-04 14:06:31] INFO:     127.0.0.1:43316 - "POST /tokenize HTTP/1.1" 200 OK
+[2026-09-04 14:06:31] INFO:     127.0.0.1:43314 - "POST /tokenize HTTP/1.1" 200 OK
+[2026-09-04 14:06:31] INFO:     127.0.0.1:43332 - "POST /tokenize HTTP/1.1" 200 OK
+[2026-09-04 14:06:32 TP0] Prefill batch, #new-seq: 8, #new-token: 2560, #cached-token: 0, full token usage: 0.00, mamba usage: 0.08, #running-req: 0, #queue-req: 0, #pending-token: 0, cuda graph: False, input throughput (token/s): 402.65
+[2026-09-04 14:06:32] INFO:     127.0.0.1:43336 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-09-04 14:06:32] INFO:     127.0.0.1:43356 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-09-04 14:06:32] INFO:     127.0.0.1:43352 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-09-04 14:06:32] INFO:     127.0.0.1:43362 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-09-04 14:06:32] INFO:     127.0.0.1:43364 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-09-04 14:06:32] INFO:     127.0.0.1:43378 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-09-04 14:06:32] INFO:     127.0.0.1:43392 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-09-04 14:06:32] INFO:     127.0.0.1:43400 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-09-04 14:06:34 TP0] Decode batch, #running-req: 8, #full token: 3584, full token usage: 0.01, mamba num: 8, mamba usage: 0.08, accept len: 3.79, accept rate: 0.93, cuda graph: True, gen throughput (token/s): 312.49, #queue-req: 0
+[2026-09-04 14:06:35] INFO:     192.168.10.22:48678 - "GET /metrics HTTP/1.1" 200 OK
+[2026-09-04 14:06:37 TP0] Decode batch, #running-req: 6, #full token: 1728, full token usage: 0.00, mamba num: 3, mamba usage: 0.03, accept len: 3.62, accept rate: 0.87, cuda graph: True, gen throughput (token/s): 369.13, #queue-req: 0
+[2026-09-04 14:06:37] INFO:     127.0.0.1:58874 - "POST /tokenize HTTP/1.1" 200 OK
+[2026-09-04 14:06:37] INFO:     127.0.0.1:58896 - "POST /tokenize HTTP/1.1" 200 OK
+[2026-09-04 14:06:37] INFO:     127.0.0.1:58886 - "POST /tokenize HTTP/1.1" 200 OK
+[2026-09-04 14:06:37] INFO:     127.0.0.1:58876 - "POST /tokenize HTTP/1.1" 200 OK
+[2026-09-04 14:06:37] INFO:     127.0.0.1:58904 - "POST /tokenize HTTP/1.1" 200 OK
+[2026-09-04 14:06:37] INFO:     127.0.0.1:58920 - "POST /tokenize HTTP/1.1" 200 OK
+[2026-09-04 14:06:37] INFO:     127.0.0.1:58922 - "POST /tokenize HTTP/1.1" 200 OK
+[2026-09-04 14:06:37] INFO:     127.0.0.1:58928 - "POST /tokenize HTTP/1.1" 200 OK
+[2026-09-04 14:06:38 TP0] Prefill batch, #new-seq: 8, #new-token: 2560, #cached-token: 0, full token usage: 0.00, mamba usage: 0.08, #running-req: 0, #queue-req: 0, #pending-token: 0, cuda graph: False, input throughput (token/s): 417.50
+[2026-09-04 14:06:38] INFO:     127.0.0.1:58940 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-09-04 14:06:38] INFO:     127.0.0.1:58952 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-09-04 14:06:38] INFO:     127.0.0.1:58942 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-09-04 14:06:38] INFO:     127.0.0.1:58982 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-09-04 14:06:38] INFO:     127.0.0.1:58984 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-09-04 14:06:38] INFO:     127.0.0.1:59006 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-09-04 14:06:38] INFO:     127.0.0.1:59014 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-09-04 14:06:38] INFO:     127.0.0.1:59018 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-09-04 14:06:40 TP0] Decode batch, #running-req: 8, #full token: 3584, full token usage: 0.01, mamba num: 8, mamba usage: 0.08, accept len: 3.72, accept rate: 0.91, cuda graph: True, gen throughput (token/s): 309.64, #queue-req: 0
+[2026-09-04 14:06:40] INFO:     192.168.10.22:48678 - "GET /metrics HTTP/1.1" 200 OK
+[2026-09-04 14:06:43] INFO:     127.0.0.1:59030 - "GET /metrics HTTP/1.1" 200 OK
+[2026-09-04 14:06:44] INFO:     127.0.0.1:59034 - "POST /tokenize HTTP/1.1" 200 OK
+[2026-09-04 14:06:44] INFO:     127.0.0.1:59036 - "POST /tokenize HTTP/1.1" 200 OK
+[2026-09-04 14:06:44] INFO:     127.0.0.1:59038 - "POST /tokenize HTTP/1.1" 200 OK
+[2026-09-04 14:06:44] INFO:     127.0.0.1:59042 - "POST /tokenize HTTP/1.1" 200 OK
+[2026-09-04 14:06:44] INFO:     127.0.0.1:59056 - "POST /tokenize HTTP/1.1" 200 OK
+[2026-09-04 14:06:44] INFO:     127.0.0.1:59068 - "POST /tokenize HTTP/1.1" 200 OK
+[2026-09-04 14:06:44] INFO:     127.0.0.1:59076 - "POST /tokenize HTTP/1.1" 200 OK
+[2026-09-04 14:06:44] INFO:     127.0.0.1:59092 - "POST /tokenize HTTP/1.1" 200 OK
+[2026-09-04 14:06:44] INFO:     127.0.0.1:59104 - "POST /tokenize HTTP/1.1" 200 OK
+[2026-09-04 14:06:44] INFO:     127.0.0.1:59110 - "POST /tokenize HTTP/1.1" 200 OK
+[2026-09-04 14:06:44] INFO:     127.0.0.1:59112 - "POST /tokenize HTTP/1.1" 200 OK
+[2026-09-04 14:06:44] INFO:     127.0.0.1:59122 - "POST /tokenize HTTP/1.1" 200 OK
+[2026-09-04 14:06:44] INFO:     127.0.0.1:59138 - "POST /tokenize HTTP/1.1" 200 OK
+[2026-09-04 14:06:44] INFO:     127.0.0.1:59140 - "POST /tokenize HTTP/1.1" 200 OK
+[2026-09-04 14:06:44] INFO:     127.0.0.1:59146 - "POST /tokenize HTTP/1.1" 200 OK
+[2026-09-04 14:06:44] INFO:     127.0.0.1:59162 - "POST /tokenize HTTP/1.1" 200 OK
+[2026-09-04 14:06:45] INFO:     192.168.10.22:48678 - "GET /metrics HTTP/1.1" 200 OK
+[2026-09-04 14:06:46 TP0] Prefill batch, #new-seq: 1, #new-token: 320, #cached-token: 0, full token usage: 0.01, mamba usage: 0.14, #running-req: 0, #queue-req: 2, #pending-token: 0, cuda graph: False, input throughput (token/s): 40.47
+[2026-09-04 14:06:46] INFO:     127.0.0.1:59192 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-09-04 14:06:46 TP0] Prefill batch, #new-seq: 13, #new-token: 4096, #cached-token: 0, full token usage: 0.01, mamba usage: 0.15, #running-req: 1, #queue-req: 1, #pending-token: 632, cuda graph: False, input throughput (token/s): 5979.54
+[2026-09-04 14:06:46] INFO:     127.0.0.1:59176 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-09-04 14:06:46] INFO:     127.0.0.1:59198 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-09-04 14:06:46] INFO:     127.0.0.1:59206 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-09-04 14:06:46] INFO:     127.0.0.1:59208 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-09-04 14:06:46] INFO:     127.0.0.1:59222 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-09-04 14:06:46] INFO:     127.0.0.1:59226 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-09-04 14:06:46] INFO:     127.0.0.1:59232 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-09-04 14:06:46] INFO:     127.0.0.1:59234 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-09-04 14:06:46] INFO:     127.0.0.1:59250 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-09-04 14:06:46] INFO:     127.0.0.1:59264 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-09-04 14:06:46] INFO:     127.0.0.1:59268 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-09-04 14:06:46] INFO:     127.0.0.1:59274 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-09-04 14:06:46 TP0] QSA speculative metadata without CPU request lengths: the token-slot bound reads them back once per forward
+[2026-09-04 14:06:47 TP0] Prefill batch, #new-seq: 2, #new-token: 384, #cached-token: 0, full token usage: 0.01, mamba usage: 0.15, #running-req: 13, #queue-req: 1, #pending-token: 296, cuda graph: False, input throughput (token/s): 1003.10
+[2026-09-04 14:06:47] INFO:     127.0.0.1:59276 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-09-04 14:06:47] INFO:     127.0.0.1:59288 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-09-04 14:06:47 TP0] Decode batch, #running-req: 15, #full token: 4800, full token usage: 0.01, mamba num: 15, mamba usage: 0.15, accept len: 3.66, accept rate: 0.89, cuda graph: False, gen throughput (token/s): 173.04, #queue-req: 1
+[2026-09-04 14:06:50] INFO:     192.168.10.22:48678 - "GET /metrics HTTP/1.1" 200 OK
+[2026-09-04 14:06:51 TP0] Decode batch, #running-req: 15, #full token: 7680, full token usage: 0.01, mamba num: 15, mamba usage: 0.15, accept len: 3.76, accept rate: 0.92, cuda graph: False, gen throughput (token/s): 533.46, #queue-req: 1
+[2026-09-04 14:06:54 TP0] Prefill batch, #new-seq: 1, #new-token: 320, #cached-token: 0, full token usage: 0.01, mamba usage: 0.15, #running-req: 14, #queue-req: 0, #pending-token: 0, cuda graph: False, input throughput (token/s): 43.16
+[2026-09-04 14:06:54] INFO:     127.0.0.1:59292 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-09-04 14:06:55 TP0] Decode batch, #running-req: 1, #full token: 384, full token usage: 0.00, mamba num: 1, mamba usage: 0.01, accept len: 3.71, accept rate: 0.90, cuda graph: True, gen throughput (token/s): 423.02, #queue-req: 0
+[2026-09-04 14:06:55] INFO:     192.168.10.22:48678 - "GET /metrics HTTP/1.1" 200 OK
+[2026-09-04 14:06:57 TP0] Decode batch, #running-req: 1, #full token: 512, full token usage: 0.00, mamba num: 1, mamba usage: 0.01, accept len: 3.62, accept rate: 0.88, cuda graph: True, gen throughput (token/s): 73.62, #queue-req: 0
+[2026-09-04 14:06:58] INFO:     127.0.0.1:60342 - "POST /tokenize HTTP/1.1" 200 OK
+[2026-09-04 14:06:58] INFO:     127.0.0.1:60346 - "POST /tokenize HTTP/1.1" 200 OK
+[2026-09-04 14:06:58] INFO:     127.0.0.1:60362 - "POST /tokenize HTTP/1.1" 200 OK
+[2026-09-04 14:06:58] INFO:     127.0.0.1:60376 - "POST /tokenize HTTP/1.1" 200 OK
+[2026-09-04 14:06:58] INFO:     127.0.0.1:60378 - "POST /tokenize HTTP/1.1" 200 OK
+[2026-09-04 14:06:58] INFO:     127.0.0.1:60392 - "POST /tokenize HTTP/1.1" 200 OK
+[2026-09-04 14:06:58] INFO:     127.0.0.1:60402 - "POST /tokenize HTTP/1.1" 200 OK
+[2026-09-04 14:06:58] INFO:     127.0.0.1:60418 - "POST /tokenize HTTP/1.1" 200 OK
+[2026-09-04 14:06:58] INFO:     127.0.0.1:60420 - "POST /tokenize HTTP/1.1" 200 OK
+[2026-09-04 14:06:58] INFO:     127.0.0.1:60428 - "POST /tokenize HTTP/1.1" 200 OK
+[2026-09-04 14:06:58] INFO:     127.0.0.1:60432 - "POST /tokenize HTTP/1.1" 200 OK
+[2026-09-04 14:06:58] INFO:     127.0.0.1:60446 - "POST /tokenize HTTP/1.1" 200 OK
+[2026-09-04 14:06:58] INFO:     127.0.0.1:60458 - "POST /tokenize HTTP/1.1" 200 OK
+[2026-09-04 14:06:58] INFO:     127.0.0.1:60460 - "POST /tokenize HTTP/1.1" 200 OK
+[2026-09-04 14:06:58] INFO:     127.0.0.1:60490 - "POST /tokenize HTTP/1.1" 200 OK
+[2026-09-04 14:06:58] INFO:     127.0.0.1:60476 - "POST /tokenize HTTP/1.1" 200 OK
+[2026-09-04 14:06:59 TP0] Prefill batch, #new-seq: 5, #new-token: 1600, #cached-token: 0, full token usage: 0.01, mamba usage: 0.16, #running-req: 0, #queue-req: 0, #pending-token: 0, cuda graph: False, input throughput (token/s): 314.94
+[2026-09-04 14:06:59] INFO:     127.0.0.1:60524 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-09-04 14:06:59] INFO:     127.0.0.1:60538 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-09-04 14:06:59] INFO:     127.0.0.1:60504 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-09-04 14:06:59] INFO:     127.0.0.1:60512 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-09-04 14:06:59] INFO:     127.0.0.1:60494 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-09-04 14:06:59 TP0] Prefill batch, #new-seq: 11, #new-token: 3520, #cached-token: 0, full token usage: 0.01, mamba usage: 0.16, #running-req: 5, #queue-req: 0, #pending-token: 0, cuda graph: False, input throughput (token/s): 23129.45
+[2026-09-04 14:06:59] INFO:     127.0.0.1:60550 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-09-04 14:06:59] INFO:     127.0.0.1:60560 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-09-04 14:06:59] INFO:     127.0.0.1:60574 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-09-04 14:06:59] INFO:     127.0.0.1:60586 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-09-04 14:06:59] INFO:     127.0.0.1:60588 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-09-04 14:06:59] INFO:     127.0.0.1:60604 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-09-04 14:06:59] INFO:     127.0.0.1:60606 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-09-04 14:06:59] INFO:     127.0.0.1:60616 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-09-04 14:06:59] INFO:     127.0.0.1:60624 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-09-04 14:06:59] INFO:     127.0.0.1:60628 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-09-04 14:06:59] INFO:     127.0.0.1:60632 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-09-04 14:07:00] INFO:     192.168.10.22:54554 - "GET /metrics HTTP/1.1" 200 OK
+[2026-09-04 14:07:02 TP0] Decode batch, #running-req: 16, #full token: 6272, full token usage: 0.01, mamba num: 16, mamba usage: 0.16, accept len: 3.77, accept rate: 0.92, cuda graph: False, gen throughput (token/s): 301.01, #queue-req: 0
+[2026-09-04 14:07:05] INFO:     192.168.10.22:54554 - "GET /metrics HTTP/1.1" 200 OK
+[2026-09-04 14:07:06 TP0] Decode batch, #running-req: 16, #full token: 9216, full token usage: 0.02, mamba num: 16, mamba usage: 0.16, accept len: 3.70, accept rate: 0.90, cuda graph: False, gen throughput (token/s): 537.64, #queue-req: 0
+[2026-09-04 14:07:07] INFO:     127.0.0.1:47276 - "POST /tokenize HTTP/1.1" 200 OK
+[2026-09-04 14:07:07] INFO:     127.0.0.1:47284 - "POST /tokenize HTTP/1.1" 200 OK
+[2026-09-04 14:07:07] INFO:     127.0.0.1:47290 - "POST /tokenize HTTP/1.1" 200 OK
+[2026-09-04 14:07:07] INFO:     127.0.0.1:47302 - "POST /tokenize HTTP/1.1" 200 OK
+[2026-09-04 14:07:07] INFO:     127.0.0.1:47318 - "POST /tokenize HTTP/1.1" 200 OK
+[2026-09-04 14:07:07] INFO:     127.0.0.1:47320 - "POST /tokenize HTTP/1.1" 200 OK
+[2026-09-04 14:07:07] INFO:     127.0.0.1:47336 - "POST /tokenize HTTP/1.1" 200 OK
+[2026-09-04 14:07:07] INFO:     127.0.0.1:47344 - "POST /tokenize HTTP/1.1" 200 OK
+[2026-09-04 14:07:07] INFO:     127.0.0.1:47360 - "POST /tokenize HTTP/1.1" 200 OK
+[2026-09-04 14:07:07] INFO:     127.0.0.1:47376 - "POST /tokenize HTTP/1.1" 200 OK
+[2026-09-04 14:07:07] INFO:     127.0.0.1:47384 - "POST /tokenize HTTP/1.1" 200 OK
+[2026-09-04 14:07:07] INFO:     127.0.0.1:47394 - "POST /tokenize HTTP/1.1" 200 OK
+[2026-09-04 14:07:07] INFO:     127.0.0.1:47404 - "POST /tokenize HTTP/1.1" 200 OK
+[2026-09-04 14:07:07] INFO:     127.0.0.1:47420 - "POST /tokenize HTTP/1.1" 200 OK
+[2026-09-04 14:07:07] INFO:     127.0.0.1:47432 - "POST /tokenize HTTP/1.1" 200 OK
+[2026-09-04 14:07:07] INFO:     127.0.0.1:47444 - "POST /tokenize HTTP/1.1" 200 OK
+[2026-09-04 14:07:08 TP0] Prefill batch, #new-seq: 5, #new-token: 1600, #cached-token: 0, full token usage: 0.01, mamba usage: 0.16, #running-req: 0, #queue-req: 0, #pending-token: 0, cuda graph: False, input throughput (token/s): 178.29
+[2026-09-04 14:07:08] INFO:     127.0.0.1:47470 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-09-04 14:07:08] INFO:     127.0.0.1:47456 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-09-04 14:07:08] INFO:     127.0.0.1:47472 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-09-04 14:07:08] INFO:     127.0.0.1:47482 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-09-04 14:07:08] INFO:     127.0.0.1:47498 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-09-04 14:07:08 TP0] Prefill batch, #new-seq: 11, #new-token: 3520, #cached-token: 0, full token usage: 0.01, mamba usage: 0.16, #running-req: 5, #queue-req: 0, #pending-token: 0, cuda graph: False, input throughput (token/s): 29436.64
+[2026-09-04 14:07:08] INFO:     127.0.0.1:47508 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-09-04 14:07:08] INFO:     127.0.0.1:47514 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-09-04 14:07:08] INFO:     127.0.0.1:47526 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-09-04 14:07:08] INFO:     127.0.0.1:47542 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-09-04 14:07:08] INFO:     127.0.0.1:47556 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-09-04 14:07:08] INFO:     127.0.0.1:47566 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-09-04 14:07:08] INFO:     127.0.0.1:47586 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-09-04 14:07:08] INFO:     127.0.0.1:47572 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-09-04 14:07:08] INFO:     127.0.0.1:47608 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-09-04 14:07:08] INFO:     127.0.0.1:47594 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-09-04 14:07:08] INFO:     127.0.0.1:47610 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-09-04 14:07:10] INFO:     192.168.10.22:54554 - "GET /metrics HTTP/1.1" 200 OK
+[2026-09-04 14:07:11 TP0] Decode batch, #running-req: 16, #full token: 7168, full token usage: 0.01, mamba num: 16, mamba usage: 0.16, accept len: 3.77, accept rate: 0.92, cuda graph: False, gen throughput (token/s): 394.41, #queue-req: 0
+[2026-09-04 14:07:15] INFO:     192.168.10.22:35378 - "GET /metrics HTTP/1.1" 200 OK
+[2026-09-04 14:07:16 TP0] Decode batch, #running-req: 11, #full token: 2880, full token usage: 0.00, mamba num: 5, mamba usage: 0.05, accept len: 3.79, accept rate: 0.93, cuda graph: False, gen throughput (token/s): 534.86, #queue-req: 0
+[2026-09-04 14:07:16] INFO:     127.0.0.1:56876 - "POST /tokenize HTTP/1.1" 200 OK
+[2026-09-04 14:07:16] INFO:     127.0.0.1:56884 - "POST /tokenize HTTP/1.1" 200 OK
+[2026-09-04 14:07:16] INFO:     127.0.0.1:56878 - "POST /tokenize HTTP/1.1" 200 OK
+[2026-09-04 14:07:16] INFO:     127.0.0.1:56900 - "POST /tokenize HTTP/1.1" 200 OK
+[2026-09-04 14:07:16] INFO:     127.0.0.1:56912 - "POST /tokenize HTTP/1.1" 200 OK
+[2026-09-04 14:07:16] INFO:     127.0.0.1:56920 - "POST /tokenize HTTP/1.1" 200 OK
+[2026-09-04 14:07:16] INFO:     127.0.0.1:56928 - "POST /tokenize HTTP/1.1" 200 OK
+[2026-09-04 14:07:16] INFO:     127.0.0.1:56934 - "POST /tokenize HTTP/1.1" 200 OK
+[2026-09-04 14:07:16] INFO:     127.0.0.1:56946 - "POST /tokenize HTTP/1.1" 200 OK
+[2026-09-04 14:07:16] INFO:     127.0.0.1:56952 - "POST /tokenize HTTP/1.1" 200 OK
+[2026-09-04 14:07:16] INFO:     127.0.0.1:56966 - "POST /tokenize HTTP/1.1" 200 OK
+[2026-09-04 14:07:16] INFO:     127.0.0.1:56978 - "POST /tokenize HTTP/1.1" 200 OK
+[2026-09-04 14:07:16] INFO:     127.0.0.1:56992 - "POST /tokenize HTTP/1.1" 200 OK
+[2026-09-04 14:07:16] INFO:     127.0.0.1:57006 - "POST /tokenize HTTP/1.1" 200 OK
+[2026-09-04 14:07:16] INFO:     127.0.0.1:57010 - "POST /tokenize HTTP/1.1" 200 OK
+[2026-09-04 14:07:16] INFO:     127.0.0.1:57018 - "POST /tokenize HTTP/1.1" 200 OK
+[2026-09-04 14:07:17 TP0] Prefill batch, #new-seq: 8, #new-token: 2560, #cached-token: 0, full token usage: 0.01, mamba usage: 0.16, #running-req: 0, #queue-req: 0, #pending-token: 0, cuda graph: False, input throughput (token/s): 280.27
+[2026-09-04 14:07:18] INFO:     127.0.0.1:57026 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-09-04 14:07:18] INFO:     127.0.0.1:57028 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-09-04 14:07:18] INFO:     127.0.0.1:57046 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-09-04 14:07:18] INFO:     127.0.0.1:57062 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-09-04 14:07:18] INFO:     127.0.0.1:57066 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-09-04 14:07:18] INFO:     127.0.0.1:57074 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-09-04 14:07:18] INFO:     127.0.0.1:57084 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-09-04 14:07:18] INFO:     127.0.0.1:57096 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-09-04 14:07:18 TP0] Prefill batch, #new-seq: 8, #new-token: 2560, #cached-token: 0, full token usage: 0.01, mamba usage: 0.16, #running-req: 8, #queue-req: 0, #pending-token: 0, cuda graph: False, input throughput (token/s): 22303.52
+[2026-09-04 14:07:18] INFO:     127.0.0.1:57112 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-09-04 14:07:18] INFO:     127.0.0.1:57116 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-09-04 14:07:18] INFO:     127.0.0.1:57130 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-09-04 14:07:18] INFO:     127.0.0.1:57138 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-09-04 14:07:18] INFO:     127.0.0.1:57144 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-09-04 14:07:18] INFO:     127.0.0.1:57150 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-09-04 14:07:18] INFO:     127.0.0.1:57164 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-09-04 14:07:18] INFO:     127.0.0.1:57180 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-09-04 14:07:20] INFO:     192.168.10.22:35378 - "GET /metrics HTTP/1.1" 200 OK
+[2026-09-04 14:07:22 TP0] Decode batch, #running-req: 16, #full token: 7168, full token usage: 0.01, mamba num: 16, mamba usage: 0.16, accept len: 3.79, accept rate: 0.93, cuda graph: False, gen throughput (token/s): 364.02, #queue-req: 0
+[2026-09-04 14:07:25] INFO:     192.168.10.22:35378 - "GET /metrics HTTP/1.1" 200 OK
+[2026-09-04 14:07:27] INFO:     127.0.0.1:55380 - "POST /tokenize HTTP/1.1" 200 OK
+[2026-09-04 14:07:27] INFO:     127.0.0.1:55364 - "POST /tokenize HTTP/1.1" 200 OK
+[2026-09-04 14:07:27] INFO:     127.0.0.1:55396 - "POST /tokenize HTTP/1.1" 200 OK
+[2026-09-04 14:07:27] INFO:     127.0.0.1:55404 - "POST /tokenize HTTP/1.1" 200 OK
+[2026-09-04 14:07:27] INFO:     127.0.0.1:55418 - "POST /tokenize HTTP/1.1" 200 OK
+[2026-09-04 14:07:27] INFO:     127.0.0.1:55428 - "POST /tokenize HTTP/1.1" 200 OK
+[2026-09-04 14:07:27] INFO:     127.0.0.1:55440 - "POST /tokenize HTTP/1.1" 200 OK
+[2026-09-04 14:07:27] INFO:     127.0.0.1:55442 - "POST /tokenize HTTP/1.1" 200 OK
+[2026-09-04 14:07:27] INFO:     127.0.0.1:55444 - "POST /tokenize HTTP/1.1" 200 OK
+[2026-09-04 14:07:27] INFO:     127.0.0.1:55454 - "POST /tokenize HTTP/1.1" 200 OK
+[2026-09-04 14:07:27] INFO:     127.0.0.1:55462 - "POST /tokenize HTTP/1.1" 200 OK
+[2026-09-04 14:07:27] INFO:     127.0.0.1:55466 - "POST /tokenize HTTP/1.1" 200 OK
+[2026-09-04 14:07:27] INFO:     127.0.0.1:55482 - "POST /tokenize HTTP/1.1" 200 OK
+[2026-09-04 14:07:27] INFO:     127.0.0.1:55488 - "POST /tokenize HTTP/1.1" 200 OK
+[2026-09-04 14:07:27] INFO:     127.0.0.1:55492 - "POST /tokenize HTTP/1.1" 200 OK
+[2026-09-04 14:07:27] INFO:     127.0.0.1:55500 - "POST /tokenize HTTP/1.1" 200 OK
+[2026-09-04 14:07:29 TP0] Prefill batch, #new-seq: 13, #new-token: 4096, #cached-token: 0, full token usage: 0.01, mamba usage: 0.15, #running-req: 0, #queue-req: 1, #pending-token: 928, cuda graph: False, input throughput (token/s): 353.89
+[2026-09-04 14:07:29] INFO:     127.0.0.1:55516 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-09-04 14:07:29] INFO:     127.0.0.1:55522 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-09-04 14:07:29] INFO:     127.0.0.1:55534 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-09-04 14:07:29] INFO:     127.0.0.1:55538 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-09-04 14:07:29] INFO:     127.0.0.1:55548 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-09-04 14:07:29] INFO:     127.0.0.1:55550 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-09-04 14:07:29] INFO:     127.0.0.1:55552 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-09-04 14:07:29] INFO:     127.0.0.1:55568 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-09-04 14:07:29] INFO:     127.0.0.1:55576 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-09-04 14:07:29] INFO:     127.0.0.1:55578 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-09-04 14:07:29] INFO:     127.0.0.1:55586 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-09-04 14:07:29] INFO:     127.0.0.1:55584 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-09-04 14:07:29 TP0] Prefill batch, #new-seq: 3, #new-token: 704, #cached-token: 0, full token usage: 0.01, mamba usage: 0.15, #running-req: 12, #queue-req: 1, #pending-token: 296, cuda graph: False, input throughput (token/s): 6889.79
+[2026-09-04 14:07:29] INFO:     127.0.0.1:55594 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-09-04 14:07:29] INFO:     127.0.0.1:55602 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-09-04 14:07:29] INFO:     127.0.0.1:55614 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-09-04 14:07:30 TP0] Decode batch, #running-req: 15, #full token: 4800, full token usage: 0.01, mamba num: 15, mamba usage: 0.15, accept len: 3.73, accept rate: 0.91, cuda graph: False, gen throughput (token/s): 286.56, #queue-req: 1
+[2026-09-04 14:07:30] INFO:     192.168.10.22:35378 - "GET /metrics HTTP/1.1" 200 OK
+[2026-09-04 14:07:34 TP0] Decode batch, #running-req: 15, #full token: 7680, full token usage: 0.01, mamba num: 15, mamba usage: 0.15, accept len: 3.77, accept rate: 0.93, cuda graph: False, gen throughput (token/s): 521.55, #queue-req: 1
+[2026-09-04 14:07:35] INFO:     192.168.10.22:40492 - "GET /metrics HTTP/1.1" 200 OK
+[2026-09-04 14:07:37 TP0] Prefill batch, #new-seq: 1, #new-token: 320, #cached-token: 0, full token usage: 0.01, mamba usage: 0.07, #running-req: 14, #queue-req: 0, #pending-token: 0, cuda graph: False, input throughput (token/s): 42.10
+[2026-09-04 14:07:37] INFO:     127.0.0.1:55616 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-09-04 14:07:38 TP0] Decode batch, #running-req: 1, #full token: 384, full token usage: 0.00, mamba num: 1, mamba usage: 0.01, accept len: 3.68, accept rate: 0.89, cuda graph: True, gen throughput (token/s): 393.44, #queue-req: 0
+[2026-09-04 14:07:40 TP0] Decode batch, #running-req: 1, #full token: 512, full token usage: 0.00, mamba num: 1, mamba usage: 0.01, accept len: 3.40, accept rate: 0.80, cuda graph: True, gen throughput (token/s): 68.65, #queue-req: 0
+[2026-09-04 14:07:40] INFO:     192.168.10.22:40492 - "GET /metrics HTTP/1.1" 200 OK
+[2026-09-04 14:07:41] INFO:     127.0.0.1:54524 - "GET /metrics HTTP/1.1" 200 OK
+[2026-09-04 14:07:41] INFO:     127.0.0.1:54538 - "GET /v1/models HTTP/1.1" 200 OK
+[2026-09-04 14:07:41 TP0] Prefill batch, #new-seq: 1, #new-token: 64, #cached-token: 0, full token usage: 0.00, mamba usage: 0.01, #running-req: 0, #queue-req: 0, #pending-token: 0, cuda graph: False, input throughput (token/s): 15.97
+[2026-09-04 14:07:41] INFO:     127.0.0.1:54554 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-09-04 14:07:41 TP0] Prefill batch, #new-seq: 1, #new-token: 64, #cached-token: 0, full token usage: 0.00, mamba usage: 0.01, #running-req: 0, #queue-req: 0, #pending-token: 0, cuda graph: False, input throughput (token/s): 327.77
+[2026-09-04 14:07:41] INFO:     127.0.0.1:54570 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-09-04 14:07:41 TP0] Prefill batch, #new-seq: 1, #new-token: 64, #cached-token: 0, full token usage: 0.00, mamba usage: 0.01, #running-req: 0, #queue-req: 0, #pending-token: 0, cuda graph: False, input throughput (token/s): 320.89
+[2026-09-04 14:07:41] INFO:     127.0.0.1:54576 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-09-04 14:07:42 TP0] Prefill batch, #new-seq: 1, #new-token: 640, #cached-token: 0, full token usage: 0.00, mamba usage: 0.01, #running-req: 0, #queue-req: 0, #pending-token: 0, cuda graph: False, input throughput (token/s): 1647.52
+[2026-09-04 14:07:42] INFO:     127.0.0.1:54578 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+[2026-09-04 14:07:42 TP0] Prefill batch, #new-seq: 1, #new-token: 64, #cached-token: 0, full token usage: 0.00, mamba usage: 0.01, #running-req: 0, #queue-req: 0, #pending-token: 0, cuda graph: False, input throughput (token/s): 263.57
+[2026-09-04 14:07:43 TP0] Decode batch, #running-req: 1, #full token: 64, full token usage: 0.00, mamba num: 1, mamba usage: 0.01, accept len: 3.10, accept rate: 0.70, cuda graph: True, gen throughput (token/s): 44.73, #queue-req: 0
+[2026-09-04 14:07:44] INFO:     127.0.0.1:54590 - "POST /v1/chat/completions HTTP/1.1" 200 OK

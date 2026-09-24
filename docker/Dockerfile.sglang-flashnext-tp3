@@ -1,0 +1,82 @@
+# SGLang Flash-Next TP=3 image for the 3x DGX Spark mesh.
+#
+# Base: the OFFICIAL SGLang day-0 Flash-Next image (qwen4-main branch), pinned
+# by digest. Verified 2026-09-04 on sparkmain:
+#   lmsysorg/sglang:dev-qwen38flashnext == lmsysorg/sglang:qwen38flashnext
+#   digest sha256:5ae5816783d58e2e56e84d2e863f5441425056f500b7fbd7448c4aae017a2521
+#   sglang 0.0.0.dev1+g593134d17 (branch qwen4-main-squashed-rebased, 2026-09-03)
+#   transformers 5.12.1 (SGLang ships its own Qwen4ExpConfig; no upgrade needed)
+#   torch 2.13.0+cu130, flashinfer 0.6.18
+#   NCCL wheel 2.30.7 at /opt/sglang/lib/python3.12/site-packages/nvidia/nccl/lib
+#     -> carries the SUBNET_AWARE_ROUTING symbol, so NO donor-NCCL swap is
+#        needed here (unlike the dense repo's v0.5.18 image, whose 2.29.7 had 0).
+#   SM121 QSA fixes (#36806 guard, #36845 Triton packed-varlen kernel) are
+#     ALREADY MERGED in this base -- the community recipe's two patches are moot.
+#
+# What this image adds (and nothing else):
+#   1. patches/sglang_upstream/enable_unaligned_tp_on_cuda.py -- lifts SGLang's
+#      CPU-only unaligned-TP padding onto CUDA behind SGLANG_FORCE_UNALIGNED_TP=1,
+#      plus the MoE expert-loader gate and the vision original_num_heads fix.
+#      Inert unless the env var is set, so TP=2 boots from this image run the
+#      stock engine byte-for-byte in behaviour.
+#   2. Build-time audit + live-shim verification (fail the build, not the boot).
+#   3. Provenance written into the image.
+ARG SGLANG_BASE=lmsysorg/sglang@sha256:5ae5816783d58e2e56e84d2e863f5441425056f500b7fbd7448c4aae017a2521
+
+FROM ${SGLANG_BASE}
+
+# 0. Assert the base is what the pin says it is. A wrong base must fail HERE,
+#    not 10 minutes into a 3-node boot.
+RUN set -eux; \
+    python3 -c "import sglang.srt.models.qwen4_exp, sglang.srt.configs.qwen4_exp; print('qwen4_exp native: OK')"; \
+    NCCL=/opt/sglang/lib/python3.12/site-packages/nvidia/nccl/lib/libnccl.so.2; \
+    test -f "$NCCL"; \
+    n=$(strings "$NCCL" | grep -c SUBNET_AWARE_ROUTING || true); \
+    echo "$NCCL -> $n SUBNET_AWARE_ROUTING symbols"; \
+    [ "$n" -ge 1 ] || { echo "FATAL: base NCCL lacks SUBNET_AWARE_ROUTING; the 3-node triangle fabric cannot form a group"; exit 1; }; \
+    strings "$NCCL" | grep -m1 -E "NCCL version 2\.[0-9]+\.[0-9]+"
+
+# 1. Unaligned-TP gate lift (idempotent driver; verifies every anchor and that
+#    the is_cpu shims are live, then prints OK or exits non-zero).
+COPY patches/sglang_upstream/enable_unaligned_tp_on_cuda.py /tmp/enable_unaligned_tp_on_cuda.py
+RUN python3 /tmp/enable_unaligned_tp_on_cuda.py && rm /tmp/enable_unaligned_tp_on_cuda.py
+
+# 2. Static audit over the REAL import graph of qwen4_exp + qwen4_exp_mtp.
+#    Exits 1 listing file:line if an uncovered is_cpu() weight-padding gate
+#    exists. SKIP_GATE_AUDIT=1 only to build an image you already know is
+#    incomplete.
+ARG SKIP_GATE_AUDIT=0
+COPY scripts/audit_unaligned_tp_gates.py /tmp/audit_unaligned_tp_gates.py
+RUN if [ "$SKIP_GATE_AUDIT" = "1" ]; then \
+      echo "WARNING: gate audit SKIPPED by SKIP_GATE_AUDIT=1"; \
+    else \
+      cd /sgl-workspace/sglang/python && python3 /tmp/audit_unaligned_tp_gates.py; \
+    fi
+
+# 3. Functional shim check: import each shadowed module with the flag set and
+#    confirm is_cpu() inside it actually returns True (catches the
+#    import-order clobber bug the dense repo hit once).
+COPY scripts/verify_unaligned_tp_shims.py /tmp/verify_unaligned_tp_shims.py
+RUN cd /sgl-workspace/sglang/python && SGLANG_FORCE_UNALIGNED_TP=1 python3 /tmp/verify_unaligned_tp_shims.py
+
+# 4. Provenance (BENCHMARK-POLICY.md Req 4). Written INTO the image so a
+#    running container can be asked what it is.
+ARG SGLANG_BASE
+RUN set -eux; \
+    SGL_DIR=/sgl-workspace/sglang; \
+    { \
+      echo "sglang_base=${SGLANG_BASE:-UNPINNED}"; \
+      echo "built_utc=$(date -u +%Y-%m-%dT%H:%M:%SZ)"; \
+      echo "sglang_version=$(python3 -c 'import sglang; print(sglang.__version__)')"; \
+      echo "sglang_commit=$(git -C "$SGL_DIR" rev-parse HEAD 2>/dev/null || echo unknown)"; \
+      echo "sglang_branch=$(git -C "$SGL_DIR" branch --show-current 2>/dev/null || echo unknown)"; \
+      echo "transformers_version=$(python3 -c 'import transformers; print(transformers.__version__)')"; \
+      echo "torch_version=$(python3 -c 'import torch; print(torch.__version__)')"; \
+      echo "flashinfer_version=$(python3 -c 'import flashinfer; print(flashinfer.__version__)')"; \
+      echo "nccl_so=$(readlink -f /opt/sglang/lib/python3.12/site-packages/nvidia/nccl/lib/libnccl.so.2)"; \
+      echo "patch=enable_unaligned_tp_on_cuda (7 dense anchors + fused_moe_layer + qwen3_vl_vision_heads)"; \
+    } > /etc/sglang-flashnext-tp3-provenance; \
+    cat /etc/sglang-flashnext-tp3-provenance
+LABEL org.opencontainers.image.base.name="${SGLANG_BASE}" \
+      spark.patch="enable_unaligned_tp_on_cuda + fused_moe_layer + qwen3_vl_vision_heads" \
+      spark.model="RadixArk/Qwen3.8-Flash-Next-NVFP4"

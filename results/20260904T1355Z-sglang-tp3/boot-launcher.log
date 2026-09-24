@@ -1,0 +1,24 @@
+=== sglang-flashnext-boot: TP=3 nodes=192.168.10.10 192.168.10.11 192.168.10.12 image=sglang-flashnext-tp3:local ===
+  drop_caches OK: 192.168.10.10
+  drop_caches OK: 192.168.10.11
+  drop_caches OK: 192.168.10.12
+  starting rank 0 on 192.168.10.10 (NCCL_IB_HCA==rocep1s0f0,roceP2p1s0f0,rocep1s0f1,roceP2p1s0f1)
+351e64d112452e4e8d9789f5fff496cc7cbb369a5a0faa42d3ee39377e963268
+  starting rank 1 on 192.168.10.11 (NCCL_IB_HCA==rocep1s0f0,roceP2p1s0f0,rocep1s0f1,roceP2p1s0f1)
+c8b09117e8ef43a5475c8cb7f7e843aab237bf4200a829656ec6efc4d59619e2
+  starting rank 2 on 192.168.10.12 (NCCL_IB_HCA==rocep1s0f0,roceP2p1s0f0,rocep1s0f1,roceP2p1s0f1)
+6f546c9ac5848fd09a7220185c82d938dabf990396142ce91ed51e4ab85c5a9f
+
+  All ranks launched. Streaming rank-0 log -> /home/sparkmain/results-flash-next-sglang/20260904T1355Z-tp3/rank0-boot.log
+
+  Startup is SLOW: 126 GiB of NVFP4 weights + first-time JIT of GB10 kernels
+  (TP=3 adds never-compiled padded shapes). Frozen output is not a hang;
+  check RSS growth on a worker before calling it one.
+      tail -f /home/sparkmain/results-flash-next-sglang/20260904T1355Z-tp3/rank0-boot.log
+  Ready when this returns 200 -- but HTTP 200 IS NOT HEALTH on this model:
+      curl -s -o /dev/null -w '%{http_code}\n' http://127.0.0.1:8100/v1/models
+
+  NEXT -- do not skip:
+      ./scripts/sglang-flashnext-validate.sh http://127.0.0.1:8100/v1 qwen3.8-flash-next
+      (TP=3 additionally needs the logprob gate against the TP=2 arm before any
+       tok/s is recorded -- see docs/HANDOFF-2026-09-04-SGLANG-FLASH-NEXT-TP3.md)

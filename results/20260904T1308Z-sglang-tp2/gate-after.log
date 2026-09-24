@@ -1,0 +1,13 @@
+=== SGLang Validation Battery (http://127.0.0.1:8100/v1) ===
+== 1. Models endpoint ==
+PASS  models endpoint serves qwen3.8-flash-next-nvfp4,qwen3.8-flash-next
+== 2. Core reasoning & correctness ==
+PASS  capital lookup (Paris)
+PASS  17 x 23 = 391
+PASS  logical deduction (No)
+== 3. Needle in haystack ==
+PASS  needle ~1.5k tok (OPAL-4482)
+== 4. Text quality & degeneration ==
+PASS  no degeneration (unique-word ratio: 0.823)
+
+=== Result: ALL ACCEPTANCE TESTS PASSED (6 PASS / 0 FAIL) ===

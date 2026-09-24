@@ -1,0 +1,1 @@
+"--tp-size","3" "--max-mamba-cache-size","97" "--max-running-requests","16" "--max-total-tokens","600000" "--mem-fraction-static","0.80" 

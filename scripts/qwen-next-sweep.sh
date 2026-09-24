@@ -69,7 +69,9 @@ for c in 1 4 8 16; do
     > "$OUT/bench-c${c}.log" 2>&1
   TOTAL_EXPECTED_REQUESTS=$((TOTAL_EXPECTED_REQUESTS + 5 * c))
 
-  dec=$(grep '^FINAL' "$OUT/bench-c${c}.log" | sed -E 's/.*= ([0-9.]+) tok.*/\1/' || echo "0")
+  # Harness prints TWO FINAL lines (decode, agg); '^FINAL' alone split every
+  # rows.tsv row across two lines (seen 2026-09-04, SGLang TP=2 bundle).
+  dec=$(grep '^FINAL: median-of-trials decode' "$OUT/bench-c${c}.log" | sed -E 's/.*= ([0-9.]+) tok.*/\1/' || echo "0")
   per=$(grep '^trial' "$OUT/bench-c${c}.log" | sed -E 's/.*median_decode=([0-9.]+).*/\1/' | grep -E '^[0-9.]+$' || true)
   agg=$(grep '^trial' "$OUT/bench-c${c}.log" | sed -E 's/.*agg=([0-9.]+).*/\1/' | med)
   ttft=$(grep '^trial' "$OUT/bench-c${c}.log" | sed -E 's/.*ttft=([0-9]+)ms.*/\1/' | med)

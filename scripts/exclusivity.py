@@ -20,7 +20,44 @@ DEFAULT_METRICS_URL = "http://127.0.0.1:8100/metrics"
 
 # Counters vLLM splits across label sets; their series must be summed, not
 # overwritten, to get the engine-wide total. Gauges are deliberately absent.
-_SUMMED_COUNTERS = frozenset({"vllm:request_success_total"})
+#
+# 2026-09-04: SGLang support. SGLang (--enable-metrics) exposes the same three
+# facts under different names: gauges sglang:num_running_reqs /
+# sglang:num_queue_reqs and the counter sglang:num_requests_total (labelled
+# per model/engine, so summed like vLLM's). The engine is auto-detected from
+# which family of names the scrape contains; the rest of this file keeps
+# speaking in the vLLM names via _canonicalize() so the JSON record and the
+# sweep scripts that parse "start_request_success_total=" stay unchanged.
+_SUMMED_COUNTERS = frozenset({"vllm:request_success_total", "sglang:num_requests_total"})
+
+_SGLANG_TO_VLLM = {
+    "sglang:num_running_reqs": "vllm:num_requests_running",
+    "sglang:num_queue_reqs": "vllm:num_requests_waiting",
+    "sglang:num_requests_total": "vllm:request_success_total",
+}
+
+
+def _canonicalize(metrics: dict[str, float]) -> dict[str, float]:
+    """Map SGLang metric names onto the vLLM names the rest of this file uses.
+
+    If the scrape carries neither family, the caller's .get(..., 0.0) would
+    silently read an idle, zero-request engine -- so fail loudly instead
+    (an engine booted without --enable-metrics returns 404 or an empty body).
+    """
+    has_vllm = any(k.startswith("vllm:") for k in metrics)
+    has_sglang = any(k.startswith("sglang:") for k in metrics)
+    if not has_vllm and not has_sglang:
+        raise RuntimeError(
+            "metrics scrape contains neither vllm: nor sglang: series -- for SGLang "
+            "the server must be started with --enable-metrics"
+        )
+    if has_sglang and not has_vllm:
+        out = dict(metrics)
+        for sgl, vllm in _SGLANG_TO_VLLM.items():
+            if sgl in metrics:
+                out[vllm] = metrics[sgl]
+        return out
+    return metrics
 
 def get_engine_metrics(metrics_url: str = DEFAULT_METRICS_URL) -> dict[str, float]:
     """Scrapes and parses Prometheus metrics from vLLM engine."""
@@ -50,7 +87,7 @@ def get_engine_metrics(metrics_url: str = DEFAULT_METRICS_URL) -> dict[str, floa
                 metrics[name] = metrics.get(name, 0.0) + val
             else:
                 metrics[name] = val
-    return metrics
+    return _canonicalize(metrics)
 
 def assert_idle(
     metrics_url: str = DEFAULT_METRICS_URL,

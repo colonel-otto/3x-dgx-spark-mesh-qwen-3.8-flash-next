@@ -110,3 +110,175 @@ directories:
     confirmed. Fabric gate not yet ported to this repo (policy requirement 1
     still open) -- exclusivity is the only cross-run integrity check
     currently wired in.
+
+- dir: 20260904T1308Z-sglang-tp2
+  status: CURRENT
+  date: '2026-09-04'
+  model: RadixArk/Qwen3.8-Flash-Next-NVFP4
+  engine: SGLang sglang-flashnext-tp3:local (lmsysorg/sglang@sha256:5ae5816783d5 qwen4-main g593134d17 + enable_unaligned_tp_on_cuda, inert at TP=2)
+  nodes: 2
+  tp_size: 2
+  fabric_gate: ABSENT
+  exclusivity_gate: PRESENT-PASS
+  description: >
+    SGLang arm, 2-node TP=2 (sparkmain + spark1), RadixArk NVFP4 checkpoint,
+    native MTP (NEXTN 3 steps / 4 draft tokens), flashinfer_cutlass NVFP4
+    MoE, BF16 KV (QSA requirement), PLE offloaded to host. Flags are the
+    community 2-Spark recipe (tonyd2wild, 2026-08-26) with max-running-requests
+    raised 6->16 so c=16 is not queue-limited; both SGLang arms share every
+    knob (verified from the live process, live-knobs.txt). Zero padding
+    involved at TP=2. Run unattended by scripts/sglang-flashnext-campaign.sh
+    (campaign 20260904T1308Z): 6/6 gate before AND after the sweep,
+    exclusivity delta=155 expected=155. rows.tsv regenerated from the
+    per-trial lines by scripts/regen_rows_from_bench_logs.py because the
+    sweep script's FINAL grep split rows (fixed the same day).
+  parameters:
+    context_length: 262144
+    max_total_tokens_requested: 600000
+    max_total_num_tokens_actual: 517248
+    mem_fraction_static: 0.80
+    max_running_requests: 16
+    max_mamba_cache_size: 97
+    speculative: NEXTN steps=3 draft_tokens=4
+    kv_cache_dtype: bf16
+    moe_backend: flashinfer_cutlass
+    fp4_gemm_backend: flashinfer_cutlass
+    cuda_graph_max_bs: 8
+    radix_cache: disabled
+    output_tokens_requested: 256
+    output_tokens_actual: 256
+    reps: 5
+    reps_verified: true
+    statistic: median
+  harness: qwen-next-sweep.sh + ~/bench-miaai.py (policy-compliant, WindowCollapse asserted)
+  harness_committed: true
+  raw_data_committed: true
+  raw_files: [bench-c1.log, bench-c4.log, bench-c8.log, bench-c16.log, warmup-c1.log, warmup-c4.log, rows.tsv, exclusivity.json, gate.log, gate-after.log, live-cmd.json, live-env.json, live-knobs.txt, image-provenance.txt, boot-key-lines.txt, rank0-boot.log, rank-log-192.168.10.10.txt, rank-log-192.168.10.11.txt, sweep.log]
+  has_readme: false
+  metrics:
+    c1_tok_s: 66.5
+    c1_ttft_ms: 266
+    c1_agg_tok_s: 62.2
+    c1_decode_min: 59.3
+    c1_decode_max: 68.8
+    c4_tok_s: 40.9
+    c4_ttft_ms: 760
+    c4_agg_tok_s: 142.9
+    c4_decode_min: 39.2
+    c4_decode_max: 44.6
+    c8_tok_s: 32.5
+    c8_ttft_ms: 1384
+    c8_agg_tok_s: 213.1
+    c8_decode_min: 30.6
+    c8_decode_max: 42.1
+    c16_tok_s: 22.9
+    c16_ttft_ms: 2708
+    c16_agg_tok_s: 289.2
+    c16_decode_min: 22.5
+    c16_decode_max: 29.6
+  caveats: >
+    Cross-STACK vs the vLLM bundles (engine, drafter, KV dtype, MoE kernel
+    all differ); only the two SGLang arms are an engine-internal TP
+    comparison. c=16 is bimodal: trials 1-2 ran 29.5 tok/s / 390 agg, trials
+    0,3,4 ran 22.5-22.9 / 208-289 -- cuda-graph-max-bs 8 means c=16 decodes
+    without CUDA graphs, and MTP acceptance varies per nonce; quote the
+    spread, not the median. max_total_num_tokens landed at 517248 (SGLang
+    capped the 600K pin by memory at TP=2). Fabric gate not ported.
+    Single sweep, not repeat-day confirmed. First-ever SGLang run of this
+    model on this cluster.
+
+- dir: 20260904T1355Z-sglang-tp3
+  status: CURRENT
+  date: '2026-09-04'
+  model: RadixArk/Qwen3.8-Flash-Next-NVFP4
+  engine: SGLang sglang-flashnext-tp3:local (lmsysorg/sglang@sha256:5ae5816783d5 qwen4-main g593134d17 + enable_unaligned_tp_on_cuda, ACTIVE at TP=3)
+  nodes: 3
+  tp_size: 3
+  fabric_gate: ABSENT
+  exclusivity_gate: PRESENT-PASS
+  description: >
+    SGLang arm, 3-node TP=3 (sparkmain + spark1 + spark2) -- the first TP=3
+    run of this model on any engine other than vLLM, and the first SGLang
+    TP=3 Qwen4Exp run we know of anywhere. Same image, flags and knobs as
+    the TP=2 arm (live-knobs.txt), plus SGLANG_FORCE_UNALIGNED_TP=1 and
+    --mm-enable-dp-encoder. Padding live in the boot log (36 [ZERO-PADDING]
+    lines, one per GDN layer): Q 24->36, KV 2->3 (one head per rank), GDN
+    16->18 / 48->54, MoE and shared-expert intermediate 640->768 (256/rank;
+    cutlass NVFP4 blockscale swizzle needs 2 x per-rank width % 128 == 0,
+    which 672 fails), vision tower replicated at TP=1 from ORIGINAL sizes.
+    Three live-boot loader failures preceded this run (vision MLP 4320 vs
+    4304, unquantized qkv v1 loader 512/256, MoE gated-padding assert) --
+    see docs/HANDOFF-2026-09-04-SGLANG-FLASH-NEXT-TP3.md section 7b.
+    Campaign 20260904T1355Z: 6/6 gate before AND after the sweep,
+    exclusivity delta=155 expected=155. rows.tsv regenerated from per-trial
+    lines (regen_rows_from_bench_logs.py).
+  parameters:
+    context_length: 262144
+    max_total_tokens_requested: 600000
+    max_total_num_tokens_actual: 600000
+    mem_fraction_static: 0.80
+    max_running_requests: 16
+    max_mamba_cache_size: 97
+    speculative: NEXTN steps=3 draft_tokens=4
+    kv_cache_dtype: bf16
+    moe_backend: flashinfer_cutlass
+    fp4_gemm_backend: flashinfer_cutlass
+    cuda_graph_max_bs: 8
+    radix_cache: disabled
+    unaligned_tp_padding: Q24->36 KV2->3 GDN16->18/48->54 MoE640->768
+    output_tokens_requested: 256
+    output_tokens_actual: 256
+    reps: 5
+    reps_verified: true
+    statistic: median
+  harness: qwen-next-sweep.sh + ~/bench-miaai.py (policy-compliant, WindowCollapse asserted)
+  harness_committed: true
+  raw_data_committed: true
+  raw_files: [bench-c1.log, bench-c4.log, bench-c8.log, bench-c16.log, warmup-c1.log, warmup-c4.log, rows.tsv, exclusivity.json, gate.log, gate-after.log, live-cmd.json, live-env.json, live-knobs.txt, image-provenance.txt, boot-key-lines.txt, rank0-boot.log, rank-log-192.168.10.10.txt, rank-log-192.168.10.11.txt, rank-log-192.168.10.12.txt, sweep.log, tool-battery.log, deepctx-tool-battery.log, garble-sweep.md, ruler-lite.json, ruler-lite.log, humaneval.json, gsm8k.json, repobench-8k.json, repobench-16k.json]
+  has_readme: false
+  metrics:
+    c1_tok_s: 75.7
+    c1_ttft_ms: 259
+    c1_agg_tok_s: 70.2
+    c1_decode_min: 73.8
+    c1_decode_max: 76.2
+    c4_tok_s: 58.5
+    c4_ttft_ms: 444
+    c4_agg_tok_s: 207.3
+    c4_decode_min: 50.5
+    c4_decode_max: 64.0
+    c8_tok_s: 46.9
+    c8_ttft_ms: 725
+    c8_agg_tok_s: 322.4
+    c8_decode_min: 36.4
+    c8_decode_max: 49.2
+    c16_tok_s: 33.3
+    c16_ttft_ms: 1508
+    c16_agg_tok_s: 383.2
+    c16_decode_min: 28.3
+    c16_decode_max: 34.9
+    tool_battery: 7/7 PASS
+    deepctx_tools: 8/8 PASS (32k, 131k)
+    context_garble: 4/4 ALL CLEAN (2k, 8k, 32k, 131k)
+    ruler_lite: 12/12 PASS (8k, 32k, 131k)
+    humaneval_pass_at_1: 93.3% (153/164)
+    gsm8k_accuracy: 88.0% (88/100)
+    repobench_8k_em: 40.0% (8/20)
+    repobench_8k_es: 70.8%
+    repobench_16k_em: 20.0% (4/20)
+    repobench_16k_es: 65.3%
+  caveats: >
+    Tier 1 quality battery PASSED completely live on this arm: 7/7 standard tool
+    calls, 8/8 deep-context tool calls at 32k and 131k, 4/4 context garble sweep
+    (ALL CLEAN up to 131k), and 12/12 RULER-lite tasks (8k, 32k, 131k). Tier 2
+    coding and reasoning benchmarks completed with HumanEval pass@1 of 93.3% (153/164)
+    and GSM8K accuracy of 88.0% (88/100, greedy instruction mode without thinking).
+    RepoBench v1.1 multi-file repository benchmarks completed at 8K context (EM 40.0%,
+    ES 70.8%, mean prefill 1599 tok/s) and 16K context (EM 20.0%, ES 65.3%, mean prefill
+    2079 tok/s). Logprob parity gate against the TP=2 arm remains open. c=8 and c=16
+    spreads OVERLAP the TP=2 arm's (36.4-49.2 vs 30.6-42.1; 28.3-34.9 vs 22.5-29.6):
+    quote the c=1 / c=4 wins as clean, the c=8 / c=16 wins as median-only. Trial 0
+    at every c>1 is the slowest (cold per-nonce JIT / warm-up), so these are lower
+    bounds. Cross-STACK vs vLLM (drafter, KV dtype, MoE kernel, CUDA-graph policy
+    all differ). Fabric gate not ported. Single sweep, not repeat-day confirmed.
+

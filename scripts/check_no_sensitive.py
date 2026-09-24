@@ -147,7 +147,9 @@ def allowed_match(label, value):
                    ("REDACTED", "<redacted>", "placeholder"))
     if label == "username assignment":
         username = re.split(r"[=:]", value, maxsplit=1)[-1].strip(" \t\"'").lower()
-        return username in {"youruser", "username", "sparkmain", "spark1", "spark2"}
+        # "inspect": model reasoning text ("answer user: inspect <file>") in
+        # tool-call diagnostics, not an account name.
+        return username in {"youruser", "username", "sparkmain", "spark1", "spark2", "inspect"}
     return False
 
 

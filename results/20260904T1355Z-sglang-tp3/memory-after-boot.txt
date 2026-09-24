@@ -1,0 +1,9 @@
+== 192.168.10.10
+               total        used        free      shared  buff/cache   available
+Mem:             121          86           1          26          61          34
+== 192.168.10.11
+               total        used        free      shared  buff/cache   available
+Mem:             121          86           1          26          61          34
+== 192.168.10.12
+               total        used        free      shared  buff/cache   available
+Mem:             121          86           1          26          62          35

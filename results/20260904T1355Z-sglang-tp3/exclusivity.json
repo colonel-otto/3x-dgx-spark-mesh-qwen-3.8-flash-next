@@ -1,0 +1,10 @@
+{
+  "timestamp": "2026-09-04T14:07:41Z",
+  "status": "PASS",
+  "start_request_success_total": 7.0,
+  "end_request_success_total": 162.0,
+  "expected_requests": 155,
+  "actual_requests_delta": 155,
+  "foreign_requests_detected": 0,
+  "is_exclusive": true
+}

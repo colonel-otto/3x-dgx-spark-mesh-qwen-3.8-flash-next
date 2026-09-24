@@ -1,0 +1,9 @@
+config: prompt>=256 output_tokens=256 temperature=0.0 top_p=unset seed=1234 concurrency=4 warmup=0 repeat=2
+trial 0: c=4 p=256 median_decode=43.6 tok/s agg=143.3 ttft=1186ms prompt_tok=[294-294] n=[256, 256, 256, 256]
+trial 1: c=4 p=256 median_decode=52.1 tok/s agg=182.4 ttft=599ms prompt_tok=[294-294] n=[256, 256, 256, 256]
+
+per-trial decode (sorted): ['43.6', '52.1']
+per-trial agg    (sorted): ['143.3', '182.4']
+FINAL: median-of-trials decode = 47.8 tok/s [min 43.6 max 52.1, spread 19.5%]
+FINAL: median-of-trials agg    = 162.9 tok/s [min 143.3 max 182.4]
+NOTE: 19.5% spread across trials. Per feedback_noise_floor_before_reporting_delta, do not report a delta against another arm smaller than this spread.

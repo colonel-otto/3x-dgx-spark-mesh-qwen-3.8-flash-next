@@ -1,0 +1,29 @@
+=== Qwen Flash Next Benchmark Sweep: model=qwen3.8-flash-next-nvfp4,qwen3.8-flash-next nodes=2 mnbt=8192 out_tokens=256 -> /home/sparkmain/results-flash-next-sglang/20260904T1308Z-tp2 ===
+--- exclusivity: idle check ---
+  IDLE_OK start_request_success_total=7.0
+--- warmup (discarded) ---
+--- measuring c=1 (5 trials)
+    c=1 decode=66.5
+62.2 agg=62.2 ttft=266ms spread=[59.3, 68.8]
+--- measuring c=4 (5 trials)
+    c=4 decode=40.9
+142.9 agg=142.9 ttft=760ms spread=[39.2, 44.6]
+--- measuring c=8 (5 trials)
+    c=8 decode=32.5
+213.1 agg=213.1 ttft=1384ms spread=[30.6, 42.1]
+--- measuring c=16 (5 trials)
+    c=16 decode=22.9
+289.2 agg=289.2 ttft=2708ms spread=[22.5, 29.6]
+--- exclusivity: verify ---
+EXCLUSIVITY_PASS delta=155 expected=155
+  -> /home/sparkmain/results-flash-next-sglang/20260904T1308Z-tp2/exclusivity.json
+=== Benchmark Complete: /home/sparkmain/results-flash-next-sglang/20260904T1308Z-tp2/rows.tsv ===
+nodes	mnbt	c	median_decode_tok_s	agg_tok_s	ttft_ms	decode_min	decode_max
+2	8192	1	66.5
+62.2	62.2	266	59.3	68.8
+2	8192	4	40.9
+142.9	142.9	760	39.2	44.6
+2	8192	8	32.5
+213.1	213.1	1384	30.6	42.1
+2	8192	16	22.9
+289.2	289.2	2708	22.5	29.6
