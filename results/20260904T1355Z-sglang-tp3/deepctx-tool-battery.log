@@ -1,0 +1,15 @@
+########## CONTEXT 32768 ##########
+1. single_call   PASS finish=tool_calls ['get_weather:VALID'] (11s)
+2. multiturn     PASS content="24°C and sunny — a jacket isn't necessary. A light" (21s)
+3. complex       PASS finish=tool_calls ['complex_query:VALID'] (11s)
+4. issue55-deep  PASS finish=length n_calls=1 broken=False (16s)
+
+########## CONTEXT 131072 ##########
+1. single_call   PASS finish=tool_calls ['get_weather:VALID'] (44s)
+2. multiturn     PASS content="At 24°C and sunny, a jacket isn't necessary — a li" (89s)
+3. complex       PASS finish=tool_calls ['complex_query:VALID'] (45s)
+4. issue55-deep  PASS finish=length n_calls=1 broken=False (44s)
+
+=== HIGH-CONTEXT TOOL SUMMARY ===
+  ctx=  32768: single=True multiturn=True complex=True issue55=True
+  ctx= 131072: single=True multiturn=True complex=True issue55=True

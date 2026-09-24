@@ -1,0 +1,49 @@
+{
+  "id": "chatcmpl-b6a688204a68bcf5",
+  "object": "chat.completion",
+  "created": 1788398437,
+  "model": "qwen3.8-flash-next-nvfp4",
+  "choices": [
+    {
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": null,
+        "refusal": null,
+        "annotations": null,
+        "audio": null,
+        "function_call": null,
+        "tool_calls": [
+          {
+            "id": "chatcmpl-tool-9df8f2296415b1fb",
+            "type": "function",
+            "function": {
+              "name": "grep_search",
+              "arguments": "{\"query\": \"ui-visual-surface-contract\\\\.json\", \"path\": \".\"}"
+            }
+          }
+        ],
+        "reasoning": "We need respond findings: file not found. But maybe need inspect if exists elsewhere? User asked inspect design-system/... and report. We can maybe grep_search for filename or path? Need maybe verify not just missing due path? Could search. Since blocked need check existence. We can use grep_search query \"ui-visual-surface-contract\" path maybe \".\". But grep_search searches contents, not filenames? It says search pattern in files. Could search path. Also maybe view_file directory? No directory tool. Could grep_search for \"ui-visual-surface-contract.json\" to see references. Need maybe also check design-system/mobile-app-invariants.json? User only asks contract. But report what find. We can call grep_search.\n"
+      },
+      "logprobs": null,
+      "finish_reason": "tool_calls",
+      "stop_reason": null,
+      "token_ids": null,
+      "routed_experts": null
+    }
+  ],
+  "service_tier": null,
+  "system_fingerprint": "vllm-0.1.dev20133+gb5f995e73.d20260823-tp3-3bf00d5c",
+  "usage": {
+    "prompt_tokens": 923,
+    "total_tokens": 1121,
+    "completion_tokens": 198,
+    "prompt_tokens_details": null
+  },
+  "prompt_logprobs": null,
+  "prompt_token_ids": null,
+  "prompt_text": null,
+  "kv_transfer_params": null,
+  "ec_transfer_params": null,
+  "metrics": null
+}

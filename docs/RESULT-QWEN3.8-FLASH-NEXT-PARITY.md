@@ -64,7 +64,13 @@ All 5 core acceptance tests in `qwen-next-quick-validate.sh` passed with 100% pr
 
 ## 5. Performance Benchmark Results (TP=3, MNBT=8192)
 
-Swept across concurrencies $c \in [1, 4, 8, 16]$ with maximum sequence length 32,768 and FP8 KV cache:
+**Two bundles exist, and they are not directly comparable — read this before
+quoting either.**
+
+### 5a. Original sweep (2026-09-02, `results/20260902-tp3-mnbt8192/`)
+
+Swept across concurrencies $c \in [1, 4, 8, 16]$ with maximum sequence length
+32,768 and FP8 KV cache:
 
 | Nodes / TP | MNBT | Concurrency ($c$) | Median Decode (tok/s/user) | Aggregate Throughput (tok/s) | TTFT (ms) |
 |---|---|---|---|---|---|
@@ -72,6 +78,44 @@ Swept across concurrencies $c \in [1, 4, 8, 16]$ with maximum sequence length 32
 | 3 / TP=3 | 8192 | 4 | **32.3** | 111.4 | 605 |
 | 3 / TP=3 | 8192 | 8 | **23.9** | 149.4 | 968 |
 | 3 / TP=3 | 8192 | 16 | **18.0** | **192.5** | 1644 |
+
+**Caveat found 2026-09-03, do not treat as settled:** this bundle's actual
+decode-window length was never recorded. The harness in use at the time
+(`~/bench-miaai.py` on sparkmain) hardcoded a 128-token completion window
+with no flag to change it — the same defect class that voided the SGLang
+TP2/TP3 campaign in the sibling dense-model repo. This bundle almost
+certainly measured a 128-token window, not the 256+ `docs/BENCHMARK-POLICY.md`
+requires.
+
+### 5b. Re-run with long context + policy-compliant harness (2026-09-03, `results/20260903T2153Z-qwen3.8-flash-next-tp3-mnbt8192-256tok/`)
+
+Config adjusted: `max_model_len` 32,768 → **262,144**, `gpu-memory-
+utilization` 0.80 → **0.82**, plus a new `kernel_warmup.py` patch mount.
+Harness fixed to force an explicit **256-token** completion window
+(`--output-tokens 256`, asserted via `WindowCollapse`) and to assert cluster
+exclusivity (`exclusivity.py`) — `docs/BENCHMARK-POLICY.md` was ported into
+this repo for the first time as part of this work.
+
+| Nodes / TP | MNBT | Out tokens | Concurrency ($c$) | Median Decode (tok/s/user) | [min, max] | Aggregate (tok/s) | TTFT (ms) |
+|---|---|---|---|---|---|---|---|
+| 3 / TP=3 | 8192 | 256 | 1  | **40.9** | [38.1, 41.9] | 39.5  | 220  |
+| 3 / TP=3 | 8192 | 256 | 4  | **30.8** | [29.9, 31.4] | 113.6 | 600  |
+| 3 / TP=3 | 8192 | 256 | 8  | **25.8** | [25.4, 26.3] | 185.0 | 912  |
+| 3 / TP=3 | 8192 | 256 | 16 | **20.2** | [20.1, 20.3] | **279.8** | 1631 |
+
+Exclusivity: `EXCLUSIVITY_PASS delta=155 expected=155`. 5/5 correctness gate
+passed both before and after the sweep. Fabric gate not yet ported to this
+repo — see `docs/BENCHMARK-POLICY.md` requirement 1.
+
+Per-cell numbers land close to §5a's original figures (c=1: 40.9 vs 40.3,
+c=4: 30.8 vs 32.3, c=8: 25.8 vs 23.9, c=16: 20.2 vs 18.0) despite the longer
+context and larger completion window — consistent with, but not proof of,
+§5a having also run near a 256-token-equivalent window in practice. Treat
+§5a as unverified and §5b as the current, policy-compliant number.
+
+No TP=2 counterpart exists yet at this adjusted config / 256-token window —
+`qwen-next-boot-tp2.sh` deliberately kept its original 32K/0.80 settings for
+this re-run, whose scope was TP=3 only.
 
 ---
 

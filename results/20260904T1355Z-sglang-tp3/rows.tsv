@@ -1,0 +1,5 @@
+nodes	mnbt	c	median_decode_tok_s	agg_tok_s	ttft_ms	decode_min	decode_max
+3	8192	1	75.7	70.2	259	73.8	76.2
+3	8192	4	58.5	207.3	444	50.5	64.0
+3	8192	8	46.9	322.4	725	36.4	49.2
+3	8192	16	33.3	383.2	1508	28.3	34.9

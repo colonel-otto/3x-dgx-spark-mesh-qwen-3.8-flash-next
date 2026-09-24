@@ -9,14 +9,15 @@ defaults:
   port: 8100
   host: 0.0.0.0
   tensor_parallel: 3
-  gpu_memory_utilization: 0.80
-  max_model_len: 32768
+  gpu_memory_utilization: 0.82
+  max_model_len: 262144
   max_num_seqs: 16
   max_num_batched_tokens: 8192
   block_size: 256
   num_speculative_tokens: 1
 
 env:
+  VLLM_ALLOW_LONG_MAX_MODEL_LEN: "1"
   CUTE_DSL_ARCH: "sm_121a"
   VLLM_USE_AOT_COMPILE: "1"
   VLLM_USE_BREAKABLE_CUDAGRAPH: "0"

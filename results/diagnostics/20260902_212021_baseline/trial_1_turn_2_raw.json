@@ -1,0 +1,49 @@
+{
+  "id": "chatcmpl-8c72a311bc7dc84e",
+  "object": "chat.completion",
+  "created": 1788398425,
+  "model": "qwen3.8-flash-next-nvfp4",
+  "choices": [
+    {
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": null,
+        "refusal": null,
+        "annotations": null,
+        "audio": null,
+        "function_call": null,
+        "tool_calls": [
+          {
+            "id": "chatcmpl-tool-b9a19937a7a93379",
+            "type": "function",
+            "function": {
+              "name": "grep_search",
+              "arguments": "{\"query\": \"ui-visual-surface-contract\", \"path\": \".\"}"
+            }
+          }
+        ],
+        "reasoning": "We need report file not found. But maybe need search for similar file? User asked inspect and report. We can use grep_search or maybe view docs? Need maybe find if path differs. Use grep_search for ui-visual-surface-contract maybe.\n"
+      },
+      "logprobs": null,
+      "finish_reason": "tool_calls",
+      "stop_reason": null,
+      "token_ids": null,
+      "routed_experts": null
+    }
+  ],
+  "service_tier": null,
+  "system_fingerprint": "vllm-0.1.dev20133+gb5f995e73.d20260823-tp3-3bf00d5c",
+  "usage": {
+    "prompt_tokens": 924,
+    "total_tokens": 1021,
+    "completion_tokens": 97,
+    "prompt_tokens_details": null
+  },
+  "prompt_logprobs": null,
+  "prompt_token_ids": null,
+  "prompt_text": null,
+  "kv_transfer_params": null,
+  "ec_transfer_params": null,
+  "metrics": null
+}

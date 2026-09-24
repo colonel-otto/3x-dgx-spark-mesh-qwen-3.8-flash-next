@@ -1,0 +1,163 @@
+{
+  "model": "qwen3.8-flash-next",
+  "base_url": "http://192.168.10.10:8100/v1",
+  "seed": 42,
+  "cases": [
+    {
+      "task": "sniah(key=prairie)",
+      "target": 8192,
+      "actual_tokens": 8206,
+      "ok": true,
+      "prediction": "24592",
+      "gold": [
+        "24592"
+      ],
+      "secs": 2.8
+    },
+    {
+      "task": "mkniah(keys=3,query=river)",
+      "target": 8192,
+      "actual_tokens": 8215,
+      "ok": true,
+      "prediction": "28289",
+      "gold": [
+        "28289"
+      ],
+      "secs": 3.9
+    },
+    {
+      "task": "vartrack(chains=1,hops=4)",
+      "target": 8192,
+      "actual_tokens": 8204,
+      "ok": true,
+      "prediction": "Based on the text provided, here is the step-by-step tracking of the variable assignments:\n\n1.  `VAR",
+      "gold": [
+        "CTOPA",
+        "CGPOS",
+        "SKLHW",
+        "TEKHF",
+        "TCJJI"
+      ],
+      "secs": 6.3
+    },
+    {
+      "task": "cwe(common=5)",
+      "target": 8192,
+      "actual_tokens": 8201,
+      "ok": true,
+      "prediction": "To determine the 5 most common words, I will count the frequency of each word in the provided list o",
+      "gold": [
+        "quiver",
+        "anchor",
+        "needle",
+        "jungle",
+        "temple"
+      ],
+      "secs": 9.2
+    },
+    {
+      "task": "sniah(key=apple)",
+      "target": 32768,
+      "actual_tokens": 32780,
+      "ok": true,
+      "prediction": "61173",
+      "gold": [
+        "61173"
+      ],
+      "secs": 9.9
+    },
+    {
+      "task": "mkniah(keys=3,query=silver)",
+      "target": 32768,
+      "actual_tokens": 32790,
+      "ok": true,
+      "prediction": "96752",
+      "gold": [
+        "96752"
+      ],
+      "secs": 12.2
+    },
+    {
+      "task": "vartrack(chains=1,hops=4)",
+      "target": 32768,
+      "actual_tokens": 32784,
+      "ok": true,
+      "prediction": "Based on the text provided, here is the step-by-step tracking of the variable assignments:\n\n1.  `VAR",
+      "gold": [
+        "MEFBT",
+        "BIBMX",
+        "NBNWB",
+        "BWKYO",
+        "PBCRO"
+      ],
+      "secs": 13.8
+    },
+    {
+      "task": "cwe(common=5)",
+      "target": 32768,
+      "actual_tokens": 32777,
+      "ok": true,
+      "prediction": "To determine the 5 most common words, I will count the frequency of each word in the provided list (",
+      "gold": [
+        "yonder",
+        "yellow",
+        "valley",
+        "mirror",
+        "kettle"
+      ],
+      "secs": 16.7
+    },
+    {
+      "task": "sniah(key=utopia)",
+      "target": 131072,
+      "actual_tokens": 131086,
+      "ok": true,
+      "prediction": "60328",
+      "gold": [
+        "60328"
+      ],
+      "secs": 46.5
+    },
+    {
+      "task": "mkniah(keys=3,query=glacier)",
+      "target": 131072,
+      "actual_tokens": 131094,
+      "ok": true,
+      "prediction": "29342",
+      "gold": [
+        "29342"
+      ],
+      "secs": 44.3
+    },
+    {
+      "task": "vartrack(chains=1,hops=4)",
+      "target": 131072,
+      "actual_tokens": 131092,
+      "ok": true,
+      "prediction": "Based on the text provided, here is the chain of variable assignments:\n\n1.  `VAR UFUSM = 46347` (UFU",
+      "gold": [
+        "UFUSM",
+        "OXDDM",
+        "NOITL",
+        "VXLXL",
+        "EWLTV"
+      ],
+      "secs": 47.4
+    },
+    {
+      "task": "cwe(common=5)",
+      "target": 131072,
+      "actual_tokens": 131088,
+      "ok": true,
+      "prediction": "Based on the list provided, here is the count for the most frequent words:\n\n1.  **candle**: 15 times",
+      "gold": [
+        "orange",
+        "xenon",
+        "quartz",
+        "candle",
+        "prairie"
+      ],
+      "secs": 45.6
+    }
+  ]
+}

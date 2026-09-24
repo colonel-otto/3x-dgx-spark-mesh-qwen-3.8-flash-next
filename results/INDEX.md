@@ -11,12 +11,12 @@ and diagnostic baseline values.
 
 | Item | Count |
 |---|---:|
-| Result bundles | 1 |
-| `CURRENT` | 1 |
+| Result bundles | 4 |
+| `CURRENT` | 4 |
 | `VOID` | 0 |
 | `SUPERSEDED` | 0 |
 | Own passing fabric gate | 1 |
-| Gate absent | 0 |
+| Gate absent | 3 |
 | Predates the gate | 0 |
 
 `CURRENT` means useful within the caveats recorded for that bundle. An absent
@@ -28,6 +28,9 @@ quality evidence or a methodology-only control.
 | Bundle | Date | Nodes / TP | Gate | Description |
 |---|---|---|---|---|
 | [20260902-tp3-mnbt8192](20260902-tp3-mnbt8192/) | 2026-09-02 | 3 / 3 | `PRESENT-PASS` | Qwen 3.8 Flash Next (~180B MoE) NVFP4 TP=3 mnbt=8192 with native MTP draft model and HyperConnections |
+| [20260903T2153Z-qwen3.8-flash-next-tp3-mnbt8192-256tok](20260903T2153Z-qwen3.8-flash-next-tp3-mnbt8192-256tok/) | 2026-09-03 | 3 / 3 | `ABSENT` | 3-Node TP=3 Qwen 3.8 Flash Next (~180B MoE) re-run with long context (max_model_len 32768->262144), gpu-memory-utilization 0.80->0.82, and a new kernel_warmup.py patch mount. First sweep in this repo run against a policy-compliant harness: BENCHMARK-POLICY.md ported from the dense-model repo, bench-miaai.py's silent 128-token default replaced with an explicit --output-tokens 256 + WindowCollapse assertion, and exclusivity.py wired in to assert no foreign traffic touched the engine during the sweep. A first attempt failed its own exclusivity check (10 "foreign" requests) -- traced to a counting bug in qwen-next-sweep.sh (warmup requests not added to the expected total), fixed, and re-run clean (EXCLUSIVITY_PASS delta=155 expected=155). The failed run's numbers matched this clean re-run closely, but only the verified run is published per policy. |
+| [20260904T1308Z-sglang-tp2](20260904T1308Z-sglang-tp2/) | 2026-09-04 | 2 / 2 | `ABSENT` | SGLang arm, 2-node TP=2 (sparkmain + spark1), RadixArk NVFP4 checkpoint, native MTP (NEXTN 3 steps / 4 draft tokens), flashinfer_cutlass NVFP4 MoE, BF16 KV (QSA requirement), PLE offloaded to host. Flags are the community 2-Spark recipe (tonyd2wild, 2026-08-26) with max-running-requests raised 6->16 so c=16 is not queue-limited; both SGLang arms share every knob (verified from the live process, live-knobs.txt). Zero padding involved at TP=2. Run unattended by scripts/sglang-flashnext-campaign.sh (campaign 20260904T1308Z): 6/6 gate before AND after the sweep, exclusivity delta=155 expected=155. rows.tsv regenerated from the per-trial lines by scripts/regen_rows_from_bench_logs.py because the sweep script's FINAL grep split rows (fixed the same day). |
+| [20260904T1355Z-sglang-tp3](20260904T1355Z-sglang-tp3/) | 2026-09-04 | 3 / 3 | `ABSENT` | SGLang arm, 3-node TP=3 (sparkmain + spark1 + spark2) -- the first TP=3 run of this model on any engine other than vLLM, and the first SGLang TP=3 Qwen4Exp run we know of anywhere. Same image, flags and knobs as the TP=2 arm (live-knobs.txt), plus SGLANG_FORCE_UNALIGNED_TP=1 and --mm-enable-dp-encoder. Padding live in the boot log (36 [ZERO-PADDING] lines, one per GDN layer): Q 24->36, KV 2->3 (one head per rank), GDN 16->18 / 48->54, MoE and shared-expert intermediate 640->768 (256/rank; cutlass NVFP4 blockscale swizzle needs 2 x per-rank width % 128 == 0, which 672 fails), vision tower replicated at TP=1 from ORIGINAL sizes. Three live-boot loader failures preceded this run (vision MLP 4320 vs 4304, unquantized qkv v1 loader 512/256, MoE gated-padding assert) -- see docs/HANDOFF-2026-09-04-SGLANG-FLASH-NEXT-TP3.md section 7b. Campaign 20260904T1355Z: 6/6 gate before AND after the sweep, exclusivity delta=155 expected=155. rows.tsv regenerated from per-trial lines (regen_rows_from_bench_logs.py). |
 
 ## Superseded evidence
 

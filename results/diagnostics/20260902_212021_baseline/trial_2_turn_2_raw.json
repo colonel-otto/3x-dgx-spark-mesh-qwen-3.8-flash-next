@@ -1,0 +1,49 @@
+{
+  "id": "chatcmpl-81fa19231201b28b",
+  "object": "chat.completion",
+  "created": 1788398430,
+  "model": "qwen3.8-flash-next-nvfp4",
+  "choices": [
+    {
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": null,
+        "refusal": null,
+        "annotations": null,
+        "audio": null,
+        "function_call": null,
+        "tool_calls": [
+          {
+            "id": "chatcmpl-tool-810baf2ac7c3a642",
+            "type": "function",
+            "function": {
+              "name": "grep_search",
+              "arguments": "{\"query\": \"ui-visual-surface-contract\", \"path\": \".\"}"
+            }
+          }
+        ],
+        "reasoning": "We need report file not found. But maybe need search? User asked inspect and report. We can use grep_search to find file maybe elsewhere. Need maybe search for ui-visual-surface-contract.json. Use grep_search query maybe \"ui-visual-surface-contract\" path \".\".\n"
+      },
+      "logprobs": null,
+      "finish_reason": "tool_calls",
+      "stop_reason": null,
+      "token_ids": null,
+      "routed_experts": null
+    }
+  ],
+  "service_tier": null,
+  "system_fingerprint": "vllm-0.1.dev20133+gb5f995e73.d20260823-tp3-3bf00d5c",
+  "usage": {
+    "prompt_tokens": 921,
+    "total_tokens": 1026,
+    "completion_tokens": 105,
+    "prompt_tokens_details": null
+  },
+  "prompt_logprobs": null,
+  "prompt_token_ids": null,
+  "prompt_text": null,
+  "kv_transfer_params": null,
+  "ec_transfer_params": null,
+  "metrics": null
+}
