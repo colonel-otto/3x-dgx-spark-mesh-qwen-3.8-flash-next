@@ -1,0 +1,329 @@
+{
+  "tag": "sglang-tp3-20260923",
+  "base_url": "http://192.168.10.10:8100/v1",
+  "model_name": "qwen3.8-flash-next-nvfp4",
+  "temperature": 0.0,
+  "max_tokens": 1024,
+  "overall_pass": true,
+  "trials": [
+    [
+      {
+        "turn": 1,
+        "finish_reason": "tool_calls",
+        "tool_calls_count": 1,
+        "tool_calls": [
+          {
+            "id": "call_e975316b4afe47a98701e00e",
+            "index": 0,
+            "type": "function",
+            "function": {
+              "name": "view_file",
+              "arguments": "{\"path\": \"design-system/ui-visual-surface-contract.json\"}"
+            }
+          }
+        ],
+        "validated_tool_calls": [
+          {
+            "id": "call_e975316b4afe47a98701e00e",
+            "name": "view_file",
+            "arguments": {
+              "path": "design-system/ui-visual-surface-contract.json"
+            }
+          }
+        ],
+        "tool_validation_errors": [],
+        "content_length": 0,
+        "content": "",
+        "reasoning_length": 0,
+        "reasoning": null,
+        "prompt_tokens": 769,
+        "completion_tokens": 34,
+        "total_tokens": 803,
+        "contaminated": false,
+        "found_signatures": [],
+        "passed": true,
+        "reasons": [],
+        "latency_sec": 1.549
+      },
+      {
+        "turn": 2,
+        "finish_reason": "tool_calls",
+        "tool_calls_count": 2,
+        "tool_calls": [
+          {
+            "id": "call_5b222e8b52b4499ea310ba19",
+            "index": 0,
+            "type": "function",
+            "function": {
+              "name": "grep_search",
+              "arguments": "{\"query\": \"ui-visual-surface-contract\"}"
+            }
+          },
+          {
+            "id": "call_1ba6c2363f884f40ba174f97",
+            "index": 1,
+            "type": "function",
+            "function": {
+              "name": "grep_search",
+              "arguments": "{\"query\": \"mobile-app-invariants\"}"
+            }
+          }
+        ],
+        "validated_tool_calls": [
+          {
+            "id": "call_5b222e8b52b4499ea310ba19",
+            "name": "grep_search",
+            "arguments": {
+              "query": "ui-visual-surface-contract"
+            }
+          },
+          {
+            "id": "call_1ba6c2363f884f40ba174f97",
+            "name": "grep_search",
+            "arguments": {
+              "query": "mobile-app-invariants"
+            }
+          }
+        ],
+        "tool_validation_errors": [],
+        "content_length": 0,
+        "content": "",
+        "reasoning_length": 0,
+        "reasoning": null,
+        "prompt_tokens": 836,
+        "completion_tokens": 61,
+        "total_tokens": 897,
+        "contaminated": false,
+        "found_signatures": [],
+        "passed": true,
+        "reasons": [],
+        "latency_sec": 0.97
+      }
+    ],
+    [
+      {
+        "turn": 1,
+        "finish_reason": "tool_calls",
+        "tool_calls_count": 2,
+        "tool_calls": [
+          {
+            "id": "call_a2618121a8da4b179c0438db",
+            "index": 0,
+            "type": "function",
+            "function": {
+              "name": "grep_search",
+              "arguments": "{\"path\": \"design-system\", \"query\": \"ui-visual-surface-contract\"}"
+            }
+          },
+          {
+            "id": "call_5d07c7f734e54e0eadaeb732",
+            "index": 1,
+            "type": "function",
+            "function": {
+              "name": "view_file",
+              "arguments": "{\"path\": \"design-system/ui-visual-surface-contract.json\"}"
+            }
+          }
+        ],
+        "validated_tool_calls": [
+          {
+            "id": "call_a2618121a8da4b179c0438db",
+            "name": "grep_search",
+            "arguments": {
+              "path": "design-system",
+              "query": "ui-visual-surface-contract"
+            }
+          },
+          {
+            "id": "call_5d07c7f734e54e0eadaeb732",
+            "name": "view_file",
+            "arguments": {
+              "path": "design-system/ui-visual-surface-contract.json"
+            }
+          }
+        ],
+        "tool_validation_errors": [],
+        "content_length": 0,
+        "content": "",
+        "reasoning_length": 0,
+        "reasoning": null,
+        "prompt_tokens": 769,
+        "completion_tokens": 78,
+        "total_tokens": 847,
+        "contaminated": false,
+        "found_signatures": [],
+        "passed": true,
+        "reasons": [],
+        "latency_sec": 1.541
+      },
+      {
+        "turn": 2,
+        "finish_reason": "tool_calls",
+        "tool_calls_count": 2,
+        "tool_calls": [
+          {
+            "id": "call_8ef955649fb244b986263a22",
+            "index": 0,
+            "type": "function",
+            "function": {
+              "name": "grep_search",
+              "arguments": "{\"path\": \".\", \"query\": \"ui-visual-surface-contract\"}"
+            }
+          },
+          {
+            "id": "call_c26b2c34f20846c9861e2f7b",
+            "index": 1,
+            "type": "function",
+            "function": {
+              "name": "view_file",
+              "arguments": "{\"path\": \"design-system\"}"
+            }
+          }
+        ],
+        "validated_tool_calls": [
+          {
+            "id": "call_8ef955649fb244b986263a22",
+            "name": "grep_search",
+            "arguments": {
+              "path": ".",
+              "query": "ui-visual-surface-contract"
+            }
+          },
+          {
+            "id": "call_c26b2c34f20846c9861e2f7b",
+            "name": "view_file",
+            "arguments": {
+              "path": "design-system"
+            }
+          }
+        ],
+        "tool_validation_errors": [],
+        "content_length": 0,
+        "content": "",
+        "reasoning_length": 0,
+        "reasoning": null,
+        "prompt_tokens": 900,
+        "completion_tokens": 69,
+        "total_tokens": 969,
+        "contaminated": false,
+        "found_signatures": [],
+        "passed": true,
+        "reasons": [],
+        "latency_sec": 1.082
+      }
+    ],
+    [
+      {
+        "turn": 1,
+        "finish_reason": "tool_calls",
+        "tool_calls_count": 2,
+        "tool_calls": [
+          {
+            "id": "call_cb35d2607888456eb66965c2",
+            "index": 0,
+            "type": "function",
+            "function": {
+              "name": "grep_search",
+              "arguments": "{\"path\": \"design-system/ui-visual-surface-contract.json\", \"query\": \".\"}"
+            }
+          },
+          {
+            "id": "call_f2b5c826f43944d1a2813faf",
+            "index": 1,
+            "type": "function",
+            "function": {
+              "name": "grep_search",
+              "arguments": "{\"path\": \"design-system\", \"query\": \"surface\"}"
+            }
+          }
+        ],
+        "validated_tool_calls": [
+          {
+            "id": "call_cb35d2607888456eb66965c2",
+            "name": "grep_search",
+            "arguments": {
+              "path": "design-system/ui-visual-surface-contract.json",
+              "query": "."
+            }
+          },
+          {
+            "id": "call_f2b5c826f43944d1a2813faf",
+            "name": "grep_search",
+            "arguments": {
+              "path": "design-system",
+              "query": "surface"
+            }
+          }
+        ],
+        "tool_validation_errors": [],
+        "content_length": 0,
+        "content": "",
+        "reasoning_length": 0,
+        "reasoning": null,
+        "prompt_tokens": 769,
+        "completion_tokens": 84,
+        "total_tokens": 853,
+        "contaminated": false,
+        "found_signatures": [],
+        "passed": true,
+        "reasons": [],
+        "latency_sec": 1.245
+      },
+      {
+        "turn": 2,
+        "finish_reason": "tool_calls",
+        "tool_calls_count": 2,
+        "tool_calls": [
+          {
+            "id": "call_7ea82b4b84c24d75951f800d",
+            "index": 0,
+            "type": "function",
+            "function": {
+              "name": "view_file",
+              "arguments": "{\"path\": \"design-system/ui-visual-surface-contract.json\"}"
+            }
+          },
+          {
+            "id": "call_5a811717d15749d8a7c5a5ca",
+            "index": 1,
+            "type": "function",
+            "function": {
+              "name": "grep_search",
+              "arguments": "{\"path\": \"docs/ui-canon/mobile-invariants.md\", \"query\": \"ui-visual-surface-contract\"}"
+            }
+          }
+        ],
+        "validated_tool_calls": [
+          {
+            "id": "call_7ea82b4b84c24d75951f800d",
+            "name": "view_file",
+            "arguments": {
+              "path": "design-system/ui-visual-surface-contract.json"
+            }
+          },
+          {
+            "id": "call_5a811717d15749d8a7c5a5ca",
+            "name": "grep_search",
+            "arguments": {
+              "path": "docs/ui-canon/mobile-invariants.md",
+              "query": "ui-visual-surface-contract"
+            }
+          }
+        ],
+        "tool_validation_errors": [],
+        "content_length": 0,
+        "content": "",
+        "reasoning_length": 0,
+        "reasoning": null,
+        "prompt_tokens": 899,
+        "completion_tokens": 84,
+        "total_tokens": 983,
+        "contaminated": false,
+        "found_signatures": [],
+        "passed": true,
+        "reasons": [],
+        "latency_sec": 1.31
+      }
+    ]
+  ]
+}

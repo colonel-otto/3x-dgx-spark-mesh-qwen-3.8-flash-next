@@ -1,0 +1,413 @@
+--- a/vllm/config/virtual_tp.py	2026-09-23 19:36:24.944151353 -0400
++++ b/vllm/config/virtual_tp.py	2026-09-02 09:05:45.524897720 -0400
+@@ -1,7 +1,54 @@
+-# SPDX-License-Identifier: Apache-2.0
+-# SPDX-FileCopyrightText: Copyright contributors to the vLLM project
+-
+ from __future__ import annotations
++from transformers import AutoConfig, PretrainedConfig
++from vllm.transformers_utils.configs.qwen3_next import Qwen3NextConfig
++
++class Qwen4ExpTextConfig(Qwen3NextConfig):
++    model_type = "qwen4_exp_text"
++    vllm_virtual_tp_profile = "gqa-gdn-moe"
++
++class Qwen4ExpConfig(PretrainedConfig):
++    model_type = "qwen4_exp"
++    is_composition = True
++    vllm_virtual_tp_profile = "gqa-gdn-moe"
++    sub_configs = {"text_config": Qwen4ExpTextConfig}
++
++    def __init__(self, text_config=None, vision_config=None, **kwargs):
++        if isinstance(text_config, dict):
++            text_config = Qwen4ExpTextConfig(**text_config)
++        self.text_config = text_config
++        self.vision_config = vision_config
++        if text_config is not None:
++            for k, v in text_config.__dict__.items():
++                if k not in self.__dict__:
++                    self.__dict__[k] = v
++        self.decoder_sparse_step = getattr(text_config, "decoder_sparse_step", 1)
++        self.mlp_only_layers = getattr(text_config, "mlp_only_layers", [])
++        super().__init__(**kwargs)
++
++    def __getattr__(self, name: str):
++        if name in ("text_config", "__setstate__", "__getstate__"):
++            raise AttributeError(f"'{type(self).__name__}' object has no attribute '{name}'")
++        text_config = self.__dict__.get("text_config")
++        if text_config is not None and hasattr(text_config, name):
++            return getattr(text_config, name)
++        if name == "decoder_sparse_step":
++            return 1
++        if name == "mlp_only_layers":
++            return []
++        raise AttributeError(f"'{type(self).__name__}' object has no attribute '{name}'")
++
++try:
++    AutoConfig.register("qwen4_exp_text", Qwen4ExpTextConfig)
++    AutoConfig.register("qwen4_exp", Qwen4ExpConfig)
++except Exception:
++    pass
++
++def _ensure_qwen4_registered():
++    try:
++        from vllm.model_executor.models import ModelRegistry
++        ModelRegistry.register_model("Qwen4ExpForConditionalGeneration", "vllm.model_executor.models.qwen3_next:Qwen3NextForCausalLM")
++    except Exception:
++        pass
+ 
+ import math
+ import os
+@@ -37,6 +84,7 @@
+ 
+ 
+ def maybe_apply_b12x_virtual_tp_padding(vllm_config: VllmConfig) -> None:
++    _ensure_qwen4_registered()
+     """Automatically pad config dimensions for B12X virtual TP sharding.
+ 
+     Some B12X target models have dimensions that are not divisible by an
+@@ -56,7 +104,12 @@
+ 
+     if not _is_supported_b12x_virtual_tp_config(model_config):
+         return
+-    if not (_uses_b12x_attention(vllm_config) or _uses_native_b12x_moe(vllm_config)):
++    if (
++        _get_virtual_tp_profile(model_config) is None
++        and not _is_kimi_k3_dspark_config(model_config)
++        and not _is_dflash_config(model_config)
++        and not (_uses_b12x_attention(vllm_config) or _uses_native_b12x_moe(vllm_config))
++    ):
+         return
+ 
+     plan = _build_b12x_virtual_tp_plan(model_config, vllm_config.parallel_config)
+@@ -72,19 +125,25 @@
+     model_config: ModelConfig,
+     parallel_config: ParallelConfig,
+ ) -> None:
++    _ensure_qwen4_registered()
+     """Pad model dimensions when B12X virtual TP alignment requires it."""
+     plan_config = _get_plan_config(model_config)
+-    if getattr(plan_config, VIRTUAL_TP_PLAN_ATTR, None) is not None:
++    has_plan = getattr(plan_config, VIRTUAL_TP_PLAN_ATTR, None) is not None
++    is_supp = _is_supported_b12x_virtual_tp_config(model_config)
++    print(f"=== [apply_vtp] has_plan={has_plan} is_supported={is_supp}", flush=True)
++    if has_plan:
+         return
+-
+-    if not _is_supported_b12x_virtual_tp_config(model_config):
++    if not is_supp:
+         return
+ 
+     plan = _build_b12x_virtual_tp_plan(model_config, parallel_config)
+-    if not _plan_requires_padding(plan):
++    req_pad = _plan_requires_padding(plan)
++    print(f"=== [apply_vtp] req_padding={req_pad} plan={plan}", flush=True)
++    if not req_pad:
+         return
+ 
+     _apply_b12x_virtual_tp_plan(model_config, plan)
++    print(f"=== [apply_vtp] done! total_heads={model_config.model_arch_config.total_num_attention_heads}", flush=True)
+ 
+ 
+ def _build_b12x_virtual_tp_plan(
+@@ -93,6 +152,8 @@
+ ) -> dict[str, dict[str, int] | str]:
+     if _is_kimi_k3_dspark_config(model_config):
+         return _build_kimi_k3_dspark_virtual_tp_plan(model_config, parallel_config)
++    if _is_dflash_config(model_config):
++        return _build_dflash_virtual_tp_plan(model_config, parallel_config)
+     if _is_minimax_m3_config(model_config):
+         return _build_minimax_m3_virtual_tp_plan(model_config, parallel_config)
+     if _get_virtual_tp_profile(model_config) == _GQA_GDN_MOE_PROFILE:
+@@ -248,17 +309,21 @@
+         tp_size,
+         ratio_key="value_heads_per_key",
+     )
+-    moe_axis = _make_virtual_axis(
+-        _require_int_attr(text_config, "moe_intermediate_size"),
+-        moe_tp_size,
+-        _get_moe_intermediate_local_alignment(model_config),
+-    )
++    moe_axis = None
++    if _positive_int_attr(text_config, "moe_intermediate_size"):
++        moe_axis = _make_virtual_axis(
++            _require_int_attr(text_config, "moe_intermediate_size"),
++            moe_tp_size,
++            _get_moe_intermediate_local_alignment(model_config),
++        )
+     dense_linear_alignment = _get_dense_linear_local_alignment(model_config)
+-    shared_expert_axis = _make_virtual_axis(
+-        _require_int_attr(text_config, "shared_expert_intermediate_size"),
+-        tp_size,
+-        dense_linear_alignment,
+-    )
++    shared_expert_axis = None
++    if _positive_int_attr(text_config, "shared_expert_intermediate_size"):
++        shared_expert_axis = _make_virtual_axis(
++            _require_int_attr(text_config, "shared_expert_intermediate_size"),
++            tp_size,
++            dense_linear_alignment,
++        )
+     dense_intermediate_axis = None
+     if _positive_int_attr(text_config, "intermediate_size"):
+         dense_intermediate_axis = _make_virtual_axis(
+@@ -278,13 +343,15 @@
+         "kv_heads": kv_axis,
+         "linear_attention_key_heads": linear_key_axis,
+         "linear_attention_value_heads": linear_value_axis,
+-        "moe_intermediate_size": moe_axis,
+-        "shared_expert_intermediate_size": shared_expert_axis,
+         "mtp_projection_size": mtp_projection_axis,
+         "vocab_size": _make_virtual_vocab_axis(
+             _require_int_attr(text_config, "vocab_size"), tp_size
+         ),
+     }
++    if moe_axis is not None:
++        plan["moe_intermediate_size"] = moe_axis
++    if shared_expert_axis is not None:
++        plan["shared_expert_intermediate_size"] = shared_expert_axis
+     if dense_intermediate_axis is not None:
+         plan["dense_intermediate_size"] = dense_intermediate_axis
+ 
+@@ -452,6 +519,9 @@
+     if plan.get("model_type") == _KIMI_K3_DSPARK_PROFILE:
+         _apply_kimi_k3_dspark_virtual_tp_plan(model_config, plan)
+         return
++    if plan.get("model_type") == "dflash":
++        _apply_dflash_virtual_tp_plan(model_config, plan)
++        return
+     if plan.get("model_type") == "minimax_m3":
+         _apply_minimax_m3_virtual_tp_plan(model_config, plan)
+         return
+@@ -504,7 +574,10 @@
+                 continue
+             setattr(vision_config, f"original_{attr}", vision_axis["original_size"])
+             setattr(vision_config, attr, vision_axis["padded_size"])
+-        setattr(vision_config, VIRTUAL_TP_PLAN_ATTR, plan)
++        if isinstance(vision_config, dict):
++            vision_config[VIRTUAL_TP_PLAN_ATTR] = plan
++        else:
++            setattr(vision_config, VIRTUAL_TP_PLAN_ATTR, plan)
+ 
+     for config in configs:
+         setattr(config, VIRTUAL_TP_PLAN_ATTR, plan)
+@@ -624,7 +697,8 @@
+         ("shared_expert_intermediate_size", "shared_expert_intermediate_size"),
+     )
+     for axis_name, attr in config_axes:
+-        _apply_virtual_axis_to_config_attr(configs, plan, axis_name, attr)
++        if _optional_axis(plan, axis_name) is not None:
++            _apply_virtual_axis_to_config_attr(configs, plan, axis_name, attr)
+     if _optional_axis(plan, "dense_intermediate_size") is not None:
+         _apply_virtual_axis_to_config_attr(
+             configs, plan, "dense_intermediate_size", "intermediate_size"
+@@ -638,7 +712,10 @@
+         _apply_virtual_axis_to_config_attr(
+             (vision_config,), plan, "vision_intermediate_size", "intermediate_size"
+         )
+-        setattr(vision_config, VIRTUAL_TP_PLAN_ATTR, plan)
++        if isinstance(vision_config, dict):
++            vision_config[VIRTUAL_TP_PLAN_ATTR] = plan
++        else:
++            setattr(vision_config, VIRTUAL_TP_PLAN_ATTR, plan)
+ 
+     for config in configs:
+         setattr(config, VIRTUAL_TP_PLAN_ATTR, plan)
+@@ -772,15 +849,20 @@
+             "B12X virtual TP padding is incompatible with DeepGEMM MegaMoE."
+         )
+ 
+-    if not _uses_native_b12x_moe(vllm_config):
++    if _get_virtual_tp_profile(model_config) == _GQA_GDN_MOE_PROFILE:
++        if model_config.is_moe and not _uses_native_b12x_moe(vllm_config):
++            raise ValueError(
++                "B12X virtual TP padding for MoE requires the native B12X MoE "
++                "backend. Pass --moe-backend b12x or set VLLM_USE_B12X_MOE=1."
++            )
++        return
++
++    if model_config.is_moe and not _uses_native_b12x_moe(vllm_config):
+         raise ValueError(
+             "B12X virtual TP padding requires the native B12X MoE "
+             "backend. Pass --moe-backend b12x or set VLLM_USE_B12X_MOE=1."
+         )
+ 
+-    if _get_virtual_tp_profile(model_config) == _GQA_GDN_MOE_PROFILE:
+-        return
+-
+     if _is_minimax_m3_config(model_config):
+         if not _uses_minimax_m3_b12x_attention(vllm_config):
+             raise ValueError(
+@@ -847,21 +929,101 @@
+ 
+ 
+ def _get_virtual_tp_profile(model_config: ModelConfig) -> str | None:
+-    profiles = {
+-        str(profile)
+-        for config in _iter_virtual_tp_configs(model_config)
+-        if (profile := getattr(config, VIRTUAL_TP_PROFILE_ATTR, None)) is not None
++    for config in _iter_virtual_tp_configs(model_config):
++        profile = getattr(config, VIRTUAL_TP_PROFILE_ATTR, None)
++        if profile is not None:
++            return str(profile)
++        if getattr(config, "linear_num_key_heads", None) is not None:
++            return _GQA_GDN_MOE_PROFILE
++        m_type = str(getattr(config, "model_type", "") or "").lower()
++        if m_type in ("qwen3_next", "qwen4_exp", "qwen4_exp_text", "qwen3_5_moe", "qwen3_moe", "qwen3_5", "qwen3"):
++            return _GQA_GDN_MOE_PROFILE
++        archs = getattr(config, "architectures", None) or ()
++        if any("Qwen4Exp" in str(a) or "Qwen3Next" in str(a) for a in archs):
++            return _GQA_GDN_MOE_PROFILE
++    return None
++
++
++
++def _is_dflash_config(model_config: ModelConfig) -> bool:
++    configs = list(_iter_virtual_tp_configs(model_config))
++    for config in configs:
++        arch = getattr(config, "architectures", None) or []
++        df_cfg = getattr(config, "dflash_config", None)
++        if (
++            "DFlashDraftModel" in arch
++            or "DFlash2DraftModel" in arch
++            or df_cfg is not None
++        ):
++            return True
++    return False
++
++def _build_dflash_virtual_tp_plan(
++    model_config: ModelConfig,
++    parallel_config: ParallelConfig,
++) -> dict[str, dict[str, int] | str]:
++    text_config = model_config.hf_text_config
++    tp_size = parallel_config.tensor_parallel_size
++    attention_axis, kv_axis = _make_coupled_virtual_axes(
++        _require_int_attr(text_config, "num_attention_heads"),
++        _require_int_attr(text_config, "num_key_value_heads"),
++        tp_size,
++        ratio_key="q_heads_per_kv",
++        allow_secondary_replication=True,
++    )
++    return {
++        "sharding": _VIRTUAL_TP_PLAN_KIND_B12X_PADDED,
++        "model_type": "dflash",
++        "attention_heads": attention_axis,
++        "kv_heads": kv_axis,
++        "dense_intermediate_size": _make_virtual_axis(
++            _require_int_attr(text_config, "intermediate_size"),
++            tp_size,
++            _get_dense_linear_local_alignment(model_config),
++        ),
++        "vocab_size": _make_virtual_vocab_axis(
++            _require_int_attr(text_config, "vocab_size"), tp_size
++        ),
+     }
+-    if len(profiles) > 1:
+-        raise ValueError(
+-            "B12X virtual TP padding found conflicting model shape profiles: "
+-            f"{sorted(profiles)}."
+-        )
+-    return next(iter(profiles), None)
+ 
++def _apply_dflash_virtual_tp_plan(
++    model_config: ModelConfig,
++    plan: dict[str, dict[str, int] | str],
++) -> None:
++    configs = tuple(_iter_virtual_tp_configs(model_config))
++    _apply_virtual_axis_to_config_attr(
++        configs, plan, "attention_heads", "num_attention_heads"
++    )
++    _apply_virtual_axis_to_config_attr(
++        configs, plan, "kv_heads", "num_key_value_heads"
++    )
++    _apply_virtual_axis_to_config_attr(
++        configs, plan, "dense_intermediate_size", "intermediate_size"
++    )
++    for config in configs:
++        setattr(config, VIRTUAL_TP_PLAN_ATTR, plan)
++
++    model_config.model_arch_config = model_config.get_model_arch_config()
++
++    changes = []
++    for axis_name, label in (
++        ("attention_heads", "attention heads"),
++        ("kv_heads", "KV heads"),
++        ("dense_intermediate_size", "dense intermediate size"),
++        ("vocab_size", "vocab storage size"),
++    ):
++        axis = _require_axis(plan, axis_name)
++        if axis["original_size"] != axis["padded_size"]:
++            changes.append(label + " " + str(axis["original_size"]) + " -> " + str(axis["padded_size"]))
++    logger.warning(
++        "Automatically enabled B12X virtual TP padding for the DFlash draft: %s.",
++        ", ".join(changes),
++    )
+ 
+ def _is_supported_b12x_virtual_tp_config(model_config: ModelConfig) -> bool:
+     return (
++        _is_dflash_config(model_config)
++        or 
+         _get_virtual_tp_profile(model_config) == _GQA_GDN_MOE_PROFILE
+         or _is_kimi_k3_dspark_config(model_config)
+         or _is_deepseek_v4_config(model_config)
+@@ -949,11 +1111,15 @@
+ def _get_dense_linear_local_alignment(model_config: ModelConfig) -> int:
+     for config in _iter_virtual_tp_configs(model_config):
+         quantization_config = getattr(config, "quantization_config", None)
+-        if (
+-            isinstance(quantization_config, dict)
+-            and quantization_config.get("dense_format") == "mxfp8"
+-        ):
+-            return 32
++        if isinstance(quantization_config, dict):
++            if quantization_config.get("dense_format") == "mxfp8":
++                return 32
++            algo = str(quantization_config.get("quant_algo", "")).upper()
++            if "NVFP4" in algo or "FP4" in algo or "W4A16" in algo:
++                return _NVFP4_LOCAL_ALIGNMENT
++    quant = str(getattr(model_config, "quantization", "") or "").lower()
++    if quant in ("modelopt", "modelopt_mixed", "fp4", "nvfp4", "fbgemm_fp4"):
++        return _NVFP4_LOCAL_ALIGNMENT
+     is_nvfp4_quantized = getattr(model_config, "is_nvfp4_quantized", None)
+     if callable(is_nvfp4_quantized) and is_nvfp4_quantized():
+         return _NVFP4_LOCAL_ALIGNMENT
+@@ -1136,14 +1302,20 @@
+ 
+ 
+ def _require_int_attr(config: Any, attr: str) -> int:
+-    value = getattr(config, attr, None)
++    if isinstance(config, dict):
++        value = config.get(attr)
++    else:
++        value = getattr(config, attr, None)
+     if value is None:
+         raise ValueError(f"B12X virtual TP padding requires config attribute {attr!r}.")
+     return int(value)
+ 
+ 
+ def _positive_int_attr(config: Any, attr: str) -> bool:
+-    value = getattr(config, attr, None)
++    if isinstance(config, dict):
++        value = config.get(attr)
++    else:
++        value = getattr(config, attr, None)
+     if value is None:
+         return False
+     try:
+@@ -1198,7 +1370,11 @@
+ ) -> None:
+     axis = _require_axis(plan, axis_name)
+     for config in configs:
+-        if not hasattr(config, attr):
+-            continue
+-        setattr(config, f"original_{attr}", axis["original_size"])
+-        setattr(config, attr, axis["padded_size"])
++        if isinstance(config, dict):
++            if attr in config:
++                config[f"original_{attr}"] = axis["original_size"]
++                config[attr] = axis["padded_size"]
++        else:
++            if hasattr(config, attr):
++                setattr(config, f"original_{attr}", axis["original_size"])
++                setattr(config, attr, axis["padded_size"])
+\ No newline at end of file

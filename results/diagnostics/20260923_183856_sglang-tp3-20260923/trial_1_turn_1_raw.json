@@ -1,0 +1,47 @@
+{
+  "id": "48523f34abde40bcadf2ea38903efecc",
+  "object": "chat.completion",
+  "created": 1790203137,
+  "model": "qwen3.8-flash-next-nvfp4",
+  "choices": [
+    {
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": "",
+        "reasoning_content": null,
+        "tool_calls": [
+          {
+            "id": "call_e975316b4afe47a98701e00e",
+            "index": 0,
+            "type": "function",
+            "function": {
+              "name": "view_file",
+              "arguments": "{\"path\": \"design-system/ui-visual-surface-contract.json\"}"
+            }
+          }
+        ]
+      },
+      "logprobs": null,
+      "finish_reason": "tool_calls",
+      "matched_stop": null
+    }
+  ],
+  "usage": {
+    "prompt_tokens": 769,
+    "total_tokens": 803,
+    "completion_tokens": 34,
+    "prompt_tokens_details": null,
+    "reasoning_tokens": 0
+  },
+  "metadata": {
+    "weight_version": "default",
+    "weight_versions": [
+      {
+        "version": "default",
+        "start": 0,
+        "end": 34
+      }
+    ]
+  }
+}

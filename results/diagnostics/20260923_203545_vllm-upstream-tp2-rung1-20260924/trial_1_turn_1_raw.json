@@ -1,0 +1,68 @@
+{
+  "id": "chatcmpl-addd759a8effa729",
+  "object": "chat.completion",
+  "created": 1790210144,
+  "model": "local-inference-lab/Qwen3.8-Flash-Next-NVFP4",
+  "choices": [
+    {
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": "I'll start by reading the canon doc and the two design-system files in parallel.",
+        "refusal": null,
+        "annotations": null,
+        "audio": null,
+        "function_call": null,
+        "tool_calls": [
+          {
+            "id": "chatcmpl-tool-a85920324d12d48b",
+            "type": "function",
+            "function": {
+              "name": "view_file",
+              "arguments": "{\"path\": \"docs/ui-canon/mobile-invariants.md\"}"
+            }
+          },
+          {
+            "id": "chatcmpl-tool-8ca497b1acd37c68",
+            "type": "function",
+            "function": {
+              "name": "view_file",
+              "arguments": "{\"path\": \"design-system/ui-visual-surface-contract.json\"}"
+            }
+          },
+          {
+            "id": "chatcmpl-tool-8c469bf191bd9a01",
+            "type": "function",
+            "function": {
+              "name": "view_file",
+              "arguments": "{\"path\": \"design-system/mobile-app-invariants.json\"}"
+            }
+          }
+        ],
+        "reasoning": "Let's start by reading the relevant files. I'll make independent calls: read docs/ui-canon/mobile-invariants.md, check the existence of design-system/ui-visual-surface-contract.json, and read design-system/mobile-app-invariants.json.\n\nLet's do that.\n"
+      },
+      "logprobs": null,
+      "finish_reason": "tool_calls",
+      "stop_reason": null,
+      "token_ids": null,
+      "routed_experts": null
+    }
+  ],
+  "service_tier": null,
+  "system_fingerprint": "vllm-0.1.dev21504+g57fdda71b.d20260923-tp2-6b0122d8",
+  "usage": {
+    "prompt_tokens": 783,
+    "total_tokens": 957,
+    "completion_tokens": 174,
+    "prompt_tokens_details": null,
+    "completion_tokens_details": {
+      "reasoning_tokens": 57
+    }
+  },
+  "prompt_logprobs": null,
+  "prompt_token_ids": null,
+  "prompt_text": null,
+  "kv_transfer_params": null,
+  "ec_transfer_params": null,
+  "metrics": null
+}
