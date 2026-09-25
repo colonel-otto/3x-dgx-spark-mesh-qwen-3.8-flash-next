@@ -1,0 +1,56 @@
+{
+  "id": "999aed1c2c394b2eb732cdc2fa8aa03a",
+  "object": "chat.completion",
+  "created": 1790203143,
+  "model": "qwen3.8-flash-next-nvfp4",
+  "choices": [
+    {
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": "",
+        "reasoning_content": null,
+        "tool_calls": [
+          {
+            "id": "call_7ea82b4b84c24d75951f800d",
+            "index": 0,
+            "type": "function",
+            "function": {
+              "name": "view_file",
+              "arguments": "{\"path\": \"design-system/ui-visual-surface-contract.json\"}"
+            }
+          },
+          {
+            "id": "call_5a811717d15749d8a7c5a5ca",
+            "index": 1,
+            "type": "function",
+            "function": {
+              "name": "grep_search",
+              "arguments": "{\"path\": \"docs/ui-canon/mobile-invariants.md\", \"query\": \"ui-visual-surface-contract\"}"
+            }
+          }
+        ]
+      },
+      "logprobs": null,
+      "finish_reason": "tool_calls",
+      "matched_stop": null
+    }
+  ],
+  "usage": {
+    "prompt_tokens": 899,
+    "total_tokens": 983,
+    "completion_tokens": 84,
+    "prompt_tokens_details": null,
+    "reasoning_tokens": 0
+  },
+  "metadata": {
+    "weight_version": "default",
+    "weight_versions": [
+      {
+        "version": "default",
+        "start": 0,
+        "end": 84
+      }
+    ]
+  }
+}

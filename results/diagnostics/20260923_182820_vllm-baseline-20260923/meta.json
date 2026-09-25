@@ -1,0 +1,257 @@
+{
+  "tag": "vllm-baseline-20260923",
+  "base_url": "http://192.168.10.10:8100/v1",
+  "model_name": "qwen3.8-flash-next-nvfp4",
+  "temperature": 0.0,
+  "max_tokens": 1024,
+  "overall_pass": true,
+  "trials": [
+    [
+      {
+        "turn": 1,
+        "finish_reason": "tool_calls",
+        "tool_calls_count": 1,
+        "tool_calls": [
+          {
+            "id": "chatcmpl-tool-bf98eb6500a58f7e",
+            "type": "function",
+            "function": {
+              "name": "view_file",
+              "arguments": "{\"path\": \"design-system/ui-visual-surface-contract.json\"}"
+            }
+          }
+        ],
+        "validated_tool_calls": [
+          {
+            "id": "chatcmpl-tool-bf98eb6500a58f7e",
+            "name": "view_file",
+            "arguments": {
+              "path": "design-system/ui-visual-surface-contract.json"
+            }
+          }
+        ],
+        "tool_validation_errors": [],
+        "content_length": 0,
+        "content": null,
+        "reasoning_length": 320,
+        "reasoning": "We need answer user's request: inspect design-system/ui-visual-surface-contract.json and report findings. Need use tool. We have only view_file, grep_search. Need likely read file. Could also search? User specifically inspect file. Use view_file path. Need maybe if file doesn't exist? We'll see. Need final after tool.\n",
+        "prompt_tokens": 783,
+        "completion_tokens": 108,
+        "total_tokens": 891,
+        "contaminated": false,
+        "found_signatures": [],
+        "passed": true,
+        "reasons": [],
+        "latency_sec": 3.026
+      },
+      {
+        "turn": 2,
+        "finish_reason": "tool_calls",
+        "tool_calls_count": 1,
+        "tool_calls": [
+          {
+            "id": "chatcmpl-tool-8e2d7fd4b3f73189",
+            "type": "function",
+            "function": {
+              "name": "grep_search",
+              "arguments": "{\"query\": \"ui-visual-surface-contract\", \"path\": \".\"}"
+            }
+          }
+        ],
+        "validated_tool_calls": [
+          {
+            "id": "chatcmpl-tool-8e2d7fd4b3f73189",
+            "name": "grep_search",
+            "arguments": {
+              "query": "ui-visual-surface-contract",
+              "path": "."
+            }
+          }
+        ],
+        "tool_validation_errors": [],
+        "content_length": 0,
+        "content": null,
+        "reasoning_length": 288,
+        "reasoning": "We need report file not found. But maybe need inspect if path relative? Could search for filename. Need maybe grep_search query \"ui-visual-surface-contract\" across repo? We can call. Need maybe search for \"ui-visual-surface-contract\" and maybe \"visual-surface-contract\". Use grep_search.\n",
+        "prompt_tokens": 922,
+        "completion_tokens": 113,
+        "total_tokens": 1035,
+        "contaminated": false,
+        "found_signatures": [],
+        "passed": true,
+        "reasons": [],
+        "latency_sec": 3.607
+      }
+    ],
+    [
+      {
+        "turn": 1,
+        "finish_reason": "tool_calls",
+        "tool_calls_count": 1,
+        "tool_calls": [
+          {
+            "id": "chatcmpl-tool-973a56e6eb6946c8",
+            "type": "function",
+            "function": {
+              "name": "view_file",
+              "arguments": "{\"path\": \"design-system/ui-visual-surface-contract.json\"}"
+            }
+          }
+        ],
+        "validated_tool_calls": [
+          {
+            "id": "chatcmpl-tool-973a56e6eb6946c8",
+            "name": "view_file",
+            "arguments": {
+              "path": "design-system/ui-visual-surface-contract.json"
+            }
+          }
+        ],
+        "tool_validation_errors": [],
+        "content_length": 0,
+        "content": null,
+        "reasoning_length": 437,
+        "reasoning": "The user wants me to inspect design-system/ui-visual-surface-contract.json and report findings. Let me start by reading that file. I should also probably look at the related files mentioned: docs/ui-canon/mobile-invariants.md and design-system/mobile-app-invariants.json to cross-check claims. But the immediate next move is to read the contract JSON.\n\nLet me first try to view the file. If it doesn't exist, I'll need to search for it.\n",
+        "prompt_tokens": 783,
+        "completion_tokens": 133,
+        "total_tokens": 916,
+        "contaminated": false,
+        "found_signatures": [],
+        "passed": true,
+        "reasons": [],
+        "latency_sec": 3.784
+      },
+      {
+        "turn": 2,
+        "finish_reason": "tool_calls",
+        "tool_calls_count": 2,
+        "tool_calls": [
+          {
+            "id": "chatcmpl-tool-9e51337f14bb52bf",
+            "type": "function",
+            "function": {
+              "name": "grep_search",
+              "arguments": "{\"query\": \"ui-visual-surface-contract\", \"path\": \".\"}"
+            }
+          },
+          {
+            "id": "chatcmpl-tool-89ae3be6606aaf58",
+            "type": "function",
+            "function": {
+              "name": "grep_search",
+              "arguments": "{\"query\": \"visual-surface\", \"path\": \".\"}"
+            }
+          }
+        ],
+        "validated_tool_calls": [
+          {
+            "id": "chatcmpl-tool-9e51337f14bb52bf",
+            "name": "grep_search",
+            "arguments": {
+              "query": "ui-visual-surface-contract",
+              "path": "."
+            }
+          },
+          {
+            "id": "chatcmpl-tool-89ae3be6606aaf58",
+            "name": "grep_search",
+            "arguments": {
+              "query": "visual-surface",
+              "path": "."
+            }
+          }
+        ],
+        "tool_validation_errors": [],
+        "content_length": 0,
+        "content": null,
+        "reasoning_length": 128,
+        "reasoning": "The file doesn't exist at that path. Let me search for it across the repo, and also check the design-system directory contents.\n",
+        "prompt_tokens": 947,
+        "completion_tokens": 112,
+        "total_tokens": 1059,
+        "contaminated": false,
+        "found_signatures": [],
+        "passed": true,
+        "reasons": [],
+        "latency_sec": 3.742
+      }
+    ],
+    [
+      {
+        "turn": 1,
+        "finish_reason": "tool_calls",
+        "tool_calls_count": 1,
+        "tool_calls": [
+          {
+            "id": "chatcmpl-tool-bb9f706223b7bf28",
+            "type": "function",
+            "function": {
+              "name": "view_file",
+              "arguments": "{\"path\": \"design-system/ui-visual-surface-contract.json\"}"
+            }
+          }
+        ],
+        "validated_tool_calls": [
+          {
+            "id": "chatcmpl-tool-bb9f706223b7bf28",
+            "name": "view_file",
+            "arguments": {
+              "path": "design-system/ui-visual-surface-contract.json"
+            }
+          }
+        ],
+        "tool_validation_errors": [],
+        "content_length": 0,
+        "content": null,
+        "reasoning_length": 203,
+        "reasoning": "We need answer user: inspect design-system/ui-visual-surface-contract.json and report findings. Need use tool view_file. Need likely read file. Could also maybe grep? Need inspect. Let's call view_file.\n",
+        "prompt_tokens": 783,
+        "completion_tokens": 82,
+        "total_tokens": 865,
+        "contaminated": false,
+        "found_signatures": [],
+        "passed": true,
+        "reasons": [],
+        "latency_sec": 2.847
+      },
+      {
+        "turn": 2,
+        "finish_reason": "tool_calls",
+        "tool_calls_count": 1,
+        "tool_calls": [
+          {
+            "id": "chatcmpl-tool-9cdf4ec4bd734887",
+            "type": "function",
+            "function": {
+              "name": "grep_search",
+              "arguments": "{\"query\": \"ui-visual-surface-contract\", \"path\": \".\"}"
+            }
+          }
+        ],
+        "validated_tool_calls": [
+          {
+            "id": "chatcmpl-tool-9cdf4ec4bd734887",
+            "name": "grep_search",
+            "arguments": {
+              "query": "ui-visual-surface-contract",
+              "path": "."
+            }
+          }
+        ],
+        "tool_validation_errors": [],
+        "content_length": 0,
+        "content": null,
+        "reasoning_length": 327,
+        "reasoning": "We need report file not found. But maybe need inspect directory? User specifically inspect file. Could use grep_search? Maybe search for filename or references. Need maybe verify existence via grep? We can search for \"ui-visual-surface-contract\" in repo. Also maybe list directory? No list tool. Could grep path? Let's search.\n",
+        "prompt_tokens": 896,
+        "completion_tokens": 116,
+        "total_tokens": 1012,
+        "contaminated": false,
+        "found_signatures": [],
+        "passed": true,
+        "reasons": [],
+        "latency_sec": 3.065
+      }
+    ]
+  ]
+}

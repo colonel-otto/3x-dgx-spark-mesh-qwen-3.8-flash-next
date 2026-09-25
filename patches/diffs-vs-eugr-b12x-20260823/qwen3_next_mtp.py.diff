@@ -1,0 +1,307 @@
+--- a/vllm/model_executor/models/qwen3_next_mtp.py	2026-09-23 19:36:24.947338526 -0400
++++ b/vllm/model_executor/models/qwen3_next_mtp.py	2026-09-02 14:40:24.059347685 -0400
+@@ -1,3 +1,4 @@
++from vllm.model_executor.models.interfaces import SupportsMRoPE
+ # SPDX-License-Identifier: Apache-2.0
+ # SPDX-FileCopyrightText: Copyright contributors to the vLLM project
+ """Inference-only Qwen3Next MTP model."""
+@@ -11,7 +12,7 @@
+ from vllm.config import VllmConfig
+ from vllm.distributed.parallel_state import get_pp_group
+ from vllm.logger import init_logger
+-from vllm.model_executor.layers.linear import ColumnParallelLinear
++from vllm.model_executor.layers.linear import ReplicatedLinear
+ from vllm.model_executor.layers.logits_processor import LogitsProcessor
+ from vllm.model_executor.layers.vocab_parallel_embedding import (
+     ParallelLMHead,
+@@ -19,17 +20,18 @@
+ )
+ from vllm.model_executor.models.qwen3_next import (
+     Qwen3NextDecoderLayer,
++    Qwen3NextHyperConnection,
+     Qwen3NextModel,
+-    Qwen3NextRMSNorm,
++    Qwen4ExpTextRMSNorm,
+     QwenNextMixtureOfExperts,
+     _all_gather_hidden_and_residual,
+ )
+-from vllm.model_executor.virtual_tp import get_virtual_tp_axis_padded_size
+ from vllm.sequence import IntermediateTensors
+ from vllm.transformers_utils.configs.qwen3_next import Qwen3NextConfig
+ 
+ from .utils import (
+     AutoWeightsLoader,
++    PPMissingLayer,
+     make_empty_intermediate_tensors_factory,
+     maybe_fuse_shared_experts,
+     maybe_prefix,
+@@ -40,7 +42,15 @@
+ KVCache = tuple[torch.Tensor, torch.Tensor]
+ 
+ 
+-@support_torch_compile
++@support_torch_compile(
++    dynamic_arg_dims={
++        "input_ids": 0,
++        "positions": -1,
++        "intermediate_tensors": 0,
++        "inputs_embeds": 0,
++        "hidden_states": 0,
++    }
++)
+ class Qwen3NextMultiTokenPredictor(nn.Module):
+     hf_to_vllm_mapper = Qwen3NextModel.hf_to_vllm_mapper
+ 
+@@ -48,44 +58,37 @@
+         super().__init__()
+ 
+         model_config = vllm_config.model_config
+-        quant_config = vllm_config.quant_config
+-
+         config: Qwen3NextConfig = model_config.hf_config
+ 
+         self.config = config
+-
+         self.vocab_size = config.vocab_size
+ 
+         self.mtp_start_layer_idx = config.num_hidden_layers
+         self.num_mtp_layers = getattr(config, "num_nextn_predict_layers", 1)
+ 
++        self.hidden_size = config.hidden_size
++        self.has_hyper_connection = getattr(config, "hc_count", 0) > 1
++        self.hc_count = getattr(config, "hc_count", 4) if self.has_hyper_connection else 1
++        self.hc_dim = self.hc_count * config.hidden_size
++
+         self.embed_tokens = VocabParallelEmbedding(
+             self.vocab_size,
+-            config.hidden_size,
++            self.hidden_size,
+         )
+ 
+-        # Workaround: mtp.fc is stored as BF16 in NVFP4 checkpoints but is
+-        # missing from the checkpoint quant exclude list (its `ignore` glob
+-        # does not cover `mtp.fc`). Force unquantized to match the weights,
+-        # mirroring the Qwen3.5 MTP handling (PR #38832).
+-        fc_quant = (
+-            None
+-            if (quant_config and quant_config.get_name() == "modelopt_fp4")
+-            else quant_config
+-        )
+-        self.fc_output_size = get_virtual_tp_axis_padded_size(
+-            "mtp_projection_size",
+-            self.config.hidden_size,
+-            config=self.config,
+-        )
+-        self.fc = ColumnParallelLinear(
+-            self.config.hidden_size * 2,
+-            self.fc_output_size,
+-            gather_output=True,
++        self.fc_embedding = ReplicatedLinear(
++            self.hidden_size,
++            self.hidden_size,
++            bias=False,
++            quant_config=None,
++            prefix=f"{prefix}.fc_embedding",
++        )
++        self.fc_hidden = ReplicatedLinear(
++            self.hidden_size,
++            self.hidden_size,
+             bias=False,
+-            return_bias=False,
+-            quant_config=fc_quant,
+-            prefix=f"{prefix}.fc",
++            quant_config=None,
++            prefix=f"{prefix}.fc_hidden",
+         )
+ 
+         self.layers = torch.nn.ModuleList(
+@@ -98,15 +101,26 @@
+         )
+ 
+         self.make_empty_intermediate_tensors = make_empty_intermediate_tensors_factory(
+-            ["hidden_states", "residual"], config.hidden_size
++            ["hidden_states", "residual"], self.hc_dim if self.has_hyper_connection else self.hidden_size
+         )
+ 
+-        self.norm = Qwen3NextRMSNorm(config.hidden_size, eps=config.rms_norm_eps)
+-        self.pre_fc_norm_hidden = Qwen3NextRMSNorm(
+-            config.hidden_size, eps=config.rms_norm_eps
+-        )
+-        self.pre_fc_norm_embedding = Qwen3NextRMSNorm(
+-            config.hidden_size, eps=config.rms_norm_eps
++        if self.has_hyper_connection:
++            self.pre_fc_norm_hidden = Qwen4ExpTextRMSNorm(
++                self.hc_dim, group_size=self.hidden_size, eps=config.rms_norm_eps
++            )
++            self.hyper_connection_mixer = Qwen3NextHyperConnection(
++                config, prefix=maybe_prefix(prefix, "hyper_connection_mixer"), use_combine=False
++            )
++            self.norm = None
++        else:
++            self.pre_fc_norm_hidden = Qwen4ExpTextRMSNorm(
++                self.hidden_size, eps=config.rms_norm_eps
++            )
++            self.hyper_connection_mixer = None
++            self.norm = Qwen4ExpTextRMSNorm(self.hidden_size, eps=config.rms_norm_eps)
++
++        self.pre_fc_norm_embedding = Qwen4ExpTextRMSNorm(
++            self.hidden_size, eps=config.rms_norm_eps
+         )
+ 
+     def embed_input_ids(self, input_ids: torch.Tensor) -> torch.Tensor:
+@@ -124,11 +138,25 @@
+         if get_pp_group().is_first_rank:
+             if inputs_embeds is None:
+                 inputs_embeds = self.embed_input_ids(input_ids)
+-            assert hidden_states.shape[-1] == inputs_embeds.shape[-1]
+             inputs_embeds = self.pre_fc_norm_embedding(inputs_embeds)
+-            hidden_states = self.pre_fc_norm_hidden(hidden_states)
+-            hidden_states = torch.cat([inputs_embeds, hidden_states], dim=-1)
+-            hidden_states = self.fc(hidden_states)[..., : self.config.hidden_size]
++            inputs_embeds, _ = self.fc_embedding(inputs_embeds)
++
++            if self.has_hyper_connection:
++                num_tokens = hidden_states.shape[0]
++                if hidden_states.shape[-1] == self.hidden_size:
++                    hidden_states = hidden_states.unsqueeze(1).expand(-1, self.hc_count, -1)
++                else:
++                    hidden_states = hidden_states.view(num_tokens, self.hc_count, self.hidden_size)
++                hidden_normed = self.pre_fc_norm_hidden(hidden_states.flatten(-2)).view(
++                    num_tokens, self.hc_count, self.hidden_size
++                )
++                hidden_proj, _ = self.fc_hidden(hidden_normed)
++                hidden_states = (inputs_embeds.unsqueeze(-2) + hidden_proj).flatten(-2)
++            else:
++                hidden_normed = self.pre_fc_norm_hidden(hidden_states)
++                hidden_proj, _ = self.fc_hidden(hidden_normed)
++                hidden_states = inputs_embeds + hidden_proj
++
+             residual = None
+         else:
+             assert intermediate_tensors is not None
+@@ -148,29 +176,70 @@
+                 {"hidden_states": hidden_states, "residual": residual}
+             )
+ 
+-        if mtp_layer.use_attn_reduce_scatter_for_moe:
+-            hidden_states, residual = _all_gather_hidden_and_residual(
+-                hidden_states,
+-                residual,
+-                positions.shape[-1],
+-                self.config.hidden_size,
+-            )
+-        hidden_states, _ = self.norm(hidden_states, residual)
++        if self.has_hyper_connection:
++            hidden_states = self.hyper_connection_mixer(hidden_states)
++        else:
++            if mtp_layer.use_attn_reduce_scatter_for_moe:
++                hidden_states, residual = _all_gather_hidden_and_residual(
++                    hidden_states,
++                    residual,
++                    positions.shape[-1],
++                    self.config.hidden_size,
++                )
++            hidden_states, _ = self.norm(hidden_states, residual)
+         return hidden_states
+ 
+     def load_weights(self, weights: Iterable[tuple[str, torch.Tensor]]) -> set[str]:
++        def _remap(w):
++            for name, tensor in w:
++                if name.startswith("model.language_model."):
++                    name = "model." + name[len("model.language_model."):]
++                elif name.startswith("model.visual.") or name.startswith("visual."):
++                    continue
++                if (
++                    ".ple." in name
++                    or name.endswith(".ple")
++                    or ".indexer." in name
++                ):
++                    continue
++                if name.startswith("mtp."):
++                    name = name.replace("mtp.", "")
++                    yield name, tensor
++                else:
++                    yield name, tensor
++
+         weights = maybe_fuse_shared_experts(
+-            weights,
++            _remap(weights),
+             n_routed_experts=self.config.num_experts,
+             n_shared_experts=1,
+             ckpt_prefix="mlp.shared_expert",
+         )
+-        loader = AutoWeightsLoader(self)
++        loader = AutoWeightsLoader(
++            self,
++            skip_substrs=["hyper_connection_mixer.block_inject_weight"],
++            ignore_unexpected_prefixes=["ple", "indexer"],
++        )
+         return loader.load_weights(weights, mapper=self.hf_to_vllm_mapper)
+ 
+ 
+-@support_torch_compile
+-class Qwen3NextMTP(nn.Module, QwenNextMixtureOfExperts):
++@support_torch_compile(
++    dynamic_arg_dims={
++        "input_ids": 0,
++        "positions": -1,
++        "intermediate_tensors": 0,
++        "inputs_embeds": 0,
++        "hidden_states": 0,
++    }
++)
++class Qwen3NextMTP(nn.Module, QwenNextMixtureOfExperts, SupportsMRoPE):
++    def get_mrope_input_positions(
++        self,
++        input_tokens: list[int],
++        mm_features: list[object],
++    ) -> tuple[torch.Tensor, int]:
++        positions = torch.arange(len(input_tokens), dtype=torch.long)
++        return positions.unsqueeze(0).expand(3, -1), 0
++
+     packed_modules_mapping = {
+         "qkv_proj": [
+             "q_proj",
+@@ -178,6 +247,8 @@
+             "v_proj",
+         ],
+         "gate_up_proj": ["gate_proj", "up_proj"],
++        "in_proj_qkvz": ["in_proj_qkv", "in_proj_z"],
++        "in_proj_ba": ["in_proj_b", "in_proj_a"],
+     }
+ 
+     def __init__(self, *, vllm_config: VllmConfig, prefix: str = ""):
+@@ -234,12 +305,28 @@
+         shared_weight_names = ["embed_tokens", "lm_head"]
+ 
+         def remap_weight_names(weights):
++            fc_hidden = None
++            fc_embedding = None
+             for name, weight in weights:
++                if name.startswith("model.language_model."):
++                    name = "model." + name[len("model.language_model."):]
++                elif name.startswith("model.visual.") or name.startswith("visual."):
++                    continue
++                if (
++                    ".ple." in name
++                    or name.endswith(".ple")
++                    or ".indexer." in name
++                ):
++                    continue
+                 if name.startswith("mtp."):
+                     name = name.replace("mtp.", "model.")
+-                elif not any(key in name for key in shared_weight_names):
+-                    continue
+-                yield name, weight
+-
+-        loader = AutoWeightsLoader(self)
++                    yield name, weight
++                elif any(key in name for key in shared_weight_names):
++                    yield name, weight
++
++        loader = AutoWeightsLoader(
++            self,
++            skip_substrs=["hyper_connection_mixer.block_inject_weight"],
++            ignore_unexpected_prefixes=["ple", "indexer"],
++        )
+         return loader.load_weights(remap_weight_names(weights))

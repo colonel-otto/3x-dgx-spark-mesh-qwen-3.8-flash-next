@@ -1,0 +1,228 @@
+{
+  "tag": "vllm-colonel-tp2-prod-20260924",
+  "base_url": "http://192.168.10.10:8100/v1",
+  "model_name": "qwen3.8-flash-next-nvfp4",
+  "temperature": 0.0,
+  "max_tokens": 1024,
+  "overall_pass": false,
+  "trials": [
+    [
+      {
+        "turn": 1,
+        "finish_reason": "tool_calls",
+        "tool_calls_count": 2,
+        "tool_calls": [
+          {
+            "id": "chatcmpl-tool-905625ef45288bfe",
+            "type": "function",
+            "function": {
+              "name": "view_file",
+              "arguments": "{\"path\": \"design-system/ui-visual-surface-contract.json\"}"
+            }
+          },
+          {
+            "id": "chatcmpl-tool-aa8cccb2df19e805",
+            "type": "function",
+            "function": {
+              "name": "view_file",
+              "arguments": "{\"path\": \"docs/ui-canon/mobile-invariants.md\"}"
+            }
+          }
+        ],
+        "validated_tool_calls": [
+          {
+            "id": "chatcmpl-tool-905625ef45288bfe",
+            "name": "view_file",
+            "arguments": {
+              "path": "design-system/ui-visual-surface-contract.json"
+            }
+          },
+          {
+            "id": "chatcmpl-tool-aa8cccb2df19e805",
+            "name": "view_file",
+            "arguments": {
+              "path": "docs/ui-canon/mobile-invariants.md"
+            }
+          }
+        ],
+        "tool_validation_errors": [],
+        "content_length": 0,
+        "content": null,
+        "reasoning_length": 265,
+        "reasoning": "The user wants me to inspect design-system/ui-visual-surface-contract.json. Let me first check if it exists, and also read the relevant files.\n\nLet me make independent calls: view the doc, view the contract json, view the mobile-app-invariants.json.\n\nLet me start.\n",
+        "prompt_tokens": 783,
+        "completion_tokens": 130,
+        "total_tokens": 913,
+        "contaminated": false,
+        "found_signatures": [],
+        "passed": true,
+        "reasons": [],
+        "latency_sec": 2.464
+      },
+      {
+        "turn": 2,
+        "finish_reason": "tool_calls",
+        "tool_calls_count": 2,
+        "tool_calls": [
+          {
+            "id": "chatcmpl-tool-be7bc59194a6445e",
+            "type": "function",
+            "function": {
+              "name": "grep_search",
+              "arguments": "{\"query\": \"mobile-invariants\"}"
+            }
+          },
+          {
+            "id": "chatcmpl-tool-ad7f267dacfe7cfb",
+            "type": "function",
+            "function": {
+              "name": "grep_search",
+              "arguments": "{\"query\": \"ui-visual-surface-contract\"}"
+            }
+          }
+        ],
+        "validated_tool_calls": [
+          {
+            "id": "chatcmpl-tool-be7bc59194a6445e",
+            "name": "grep_search",
+            "arguments": {
+              "query": "mobile-invariants"
+            }
+          },
+          {
+            "id": "chatcmpl-tool-ad7f267dacfe7cfb",
+            "name": "grep_search",
+            "arguments": {
+              "query": "ui-visual-surface-contract"
+            }
+          }
+        ],
+        "tool_validation_errors": [],
+        "content_length": 0,
+        "content": null,
+        "reasoning_length": 277,
+        "reasoning": "Neither file exists. Let me search the filesystem for these files. Maybe the working directory is different, or the repo layout differs.\n\nLet me use grep_search and glob-ish approaches. I only have view_file and grep_search. Let me search for \"mobile-invariants\" across files.\n",
+        "prompt_tokens": 963,
+        "completion_tokens": 121,
+        "total_tokens": 1084,
+        "contaminated": false,
+        "found_signatures": [],
+        "passed": true,
+        "reasons": [],
+        "latency_sec": 1.865
+      }
+    ],
+    [
+      {
+        "turn": 1,
+        "finish_reason": "tool_calls",
+        "tool_calls_count": 2,
+        "tool_calls": [
+          {
+            "id": "chatcmpl-tool-b9021285a0f2f4d8",
+            "type": "function",
+            "function": {
+              "name": "view_file",
+              "arguments": "{\"path\": \"design-system/ui-visual-surface-contract.json\"}"
+            }
+          },
+          {
+            "id": "chatcmpl-tool-ac3ab2d835f248f1",
+            "type": "function",
+            "function": {
+              "name": "view_file",
+              "arguments": "{\"path\": \"docs/ui-canon/mobile-invariants.md\"}"
+            }
+          }
+        ],
+        "validated_tool_calls": [
+          {
+            "id": "chatcmpl-tool-b9021285a0f2f4d8",
+            "name": "view_file",
+            "arguments": {
+              "path": "design-system/ui-visual-surface-contract.json"
+            }
+          },
+          {
+            "id": "chatcmpl-tool-ac3ab2d835f248f1",
+            "name": "view_file",
+            "arguments": {
+              "path": "docs/ui-canon/mobile-invariants.md"
+            }
+          }
+        ],
+        "tool_validation_errors": [],
+        "content_length": 69,
+        "content": "I'll start by checking the target file and the related context files.",
+        "reasoning_length": 265,
+        "reasoning": "The user wants me to inspect design-system/ui-visual-surface-contract.json. Let me first check if it exists, and also read the relevant files.\n\nLet me make independent calls: view the doc, view the contract json, view the mobile-app-invariants.json.\n\nLet me start.\n",
+        "prompt_tokens": 783,
+        "completion_tokens": 145,
+        "total_tokens": 928,
+        "contaminated": false,
+        "found_signatures": [],
+        "passed": false,
+        "reasons": [
+          "content should be null/empty on tool turn, got 69 chars"
+        ],
+        "latency_sec": 2.058
+      }
+    ],
+    [
+      {
+        "turn": 1,
+        "finish_reason": "tool_calls",
+        "tool_calls_count": 2,
+        "tool_calls": [
+          {
+            "id": "chatcmpl-tool-ae85a4ebdbf8c910",
+            "type": "function",
+            "function": {
+              "name": "view_file",
+              "arguments": "{\"path\": \"design-system/ui-visual-surface-contract.json\"}"
+            }
+          },
+          {
+            "id": "chatcmpl-tool-94d3add1c278e97a",
+            "type": "function",
+            "function": {
+              "name": "view_file",
+              "arguments": "{\"path\": \"docs/ui-canon/mobile-invariants.md\"}"
+            }
+          }
+        ],
+        "validated_tool_calls": [
+          {
+            "id": "chatcmpl-tool-ae85a4ebdbf8c910",
+            "name": "view_file",
+            "arguments": {
+              "path": "design-system/ui-visual-surface-contract.json"
+            }
+          },
+          {
+            "id": "chatcmpl-tool-94d3add1c278e97a",
+            "name": "view_file",
+            "arguments": {
+              "path": "docs/ui-canon/mobile-invariants.md"
+            }
+          }
+        ],
+        "tool_validation_errors": [],
+        "content_length": 69,
+        "content": "I'll start by checking the target file and the related context files.",
+        "reasoning_length": 261,
+        "reasoning": "The user wants me to inspect design-system/ui-visual-surface-contract.json. Let me first check if it exists, and also read the relevant files.\n\nLet me make independent calls: view the doc, view the contract json, view mobile-app-invariants.json.\n\nLet me start.\n",
+        "prompt_tokens": 783,
+        "completion_tokens": 144,
+        "total_tokens": 927,
+        "contaminated": false,
+        "found_signatures": [],
+        "passed": false,
+        "reasons": [
+          "content should be null/empty on tool turn, got 69 chars"
+        ],
+        "latency_sec": 2.047
+      }
+    ]
+  ]
+}

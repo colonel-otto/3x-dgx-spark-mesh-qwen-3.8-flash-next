@@ -1,0 +1,49 @@
+{
+  "id": "chatcmpl-a6119242b679213c",
+  "object": "chat.completion",
+  "created": 1790202500,
+  "model": "qwen3.8-flash-next-nvfp4",
+  "choices": [
+    {
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": null,
+        "refusal": null,
+        "annotations": null,
+        "audio": null,
+        "function_call": null,
+        "tool_calls": [
+          {
+            "id": "chatcmpl-tool-bf98eb6500a58f7e",
+            "type": "function",
+            "function": {
+              "name": "view_file",
+              "arguments": "{\"path\": \"design-system/ui-visual-surface-contract.json\"}"
+            }
+          }
+        ],
+        "reasoning": "We need answer user's request: inspect design-system/ui-visual-surface-contract.json and report findings. Need use tool. We have only view_file, grep_search. Need likely read file. Could also search? User specifically inspect file. Use view_file path. Need maybe if file doesn't exist? We'll see. Need final after tool.\n"
+      },
+      "logprobs": null,
+      "finish_reason": "tool_calls",
+      "stop_reason": null,
+      "token_ids": null,
+      "routed_experts": null
+    }
+  ],
+  "service_tier": null,
+  "system_fingerprint": "vllm-0.1.dev20133+gb5f995e73.d20260823-tp3-3bf00d5c",
+  "usage": {
+    "prompt_tokens": 783,
+    "total_tokens": 891,
+    "completion_tokens": 108,
+    "prompt_tokens_details": null
+  },
+  "prompt_logprobs": null,
+  "prompt_token_ids": null,
+  "prompt_text": null,
+  "kv_transfer_params": null,
+  "ec_transfer_params": null,
+  "metrics": null
+}

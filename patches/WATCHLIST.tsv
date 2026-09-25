@@ -1,0 +1,9 @@
+# Upstream PRs/issues that would make a local patch or workaround obsolete.
+# Columns (TAB-separated): repo	number	local_item	why_we_care
+# local_item refers to docs/PATCH-INVENTORY.md ids (V1-V7, S1) or a recipe knob.
+sgl-project/sglang	38624	tool-call-parser qwen3_coder	qwen3_coder turns quoted/fenced tool markup into phantom tool calls (OpenCode echo loop)
+sgl-project/sglang	36537	enable_thinking=false default	thinking + tools + qwen3_coder loops on token 0
+vllm-project/vllm	55390	V1-V5 (MTP KV group)	vLLM identifies the MTP drafter KV-cache group for this model; prefix-cache reuse with MTP
+vllm-project/vllm	57541	tool-call-parser qwen3_xml	fenced code blocks parsed as real tool calls
+vllm-project/vllm	57699	tool-call-parser qwen3_xml	last parameter dropped when </parameter> missing
+eugr/spark-vllm-docker	411	KV sizing / boot hang	TP=2 hang at "Padding mamba page size"

@@ -1,0 +1,13 @@
+--- a/vllm/model_executor/warmup/kernel_warmup.py	2026-09-23 19:36:24.948736800 -0400
++++ b/vllm/model_executor/warmup/kernel_warmup.py	2026-09-02 14:03:02.236447588 -0400
+@@ -629,8 +629,8 @@
+         world.barrier()
+         tuner.load_configs(str(cache_path))
+ 
+-    group = world.cpu_group if world.world_size > 1 else None
+-    set_autotune_process_group(group)
++    # Disable multi-node GLOO CPU group reduce during autotune to prevent multi-node hang
++    set_autotune_process_group(None)
+     try:
+         with (
+             torch.inference_mode(),

@@ -1,0 +1,68 @@
+{
+  "id": "chatcmpl-add9b9f7fd12b101",
+  "object": "chat.completion",
+  "created": 1790210152,
+  "model": "local-inference-lab/Qwen3.8-Flash-Next-NVFP4",
+  "choices": [
+    {
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": "I'll start by inspecting the contract file along with the doc and baseline file it relates to.",
+        "refusal": null,
+        "annotations": null,
+        "audio": null,
+        "function_call": null,
+        "tool_calls": [
+          {
+            "id": "chatcmpl-tool-a3b0ceaedbff9352",
+            "type": "function",
+            "function": {
+              "name": "view_file",
+              "arguments": "{\"path\": \"design-system/ui-visual-surface-contract.json\"}"
+            }
+          },
+          {
+            "id": "chatcmpl-tool-b1bf9df4d9502d87",
+            "type": "function",
+            "function": {
+              "name": "view_file",
+              "arguments": "{\"path\": \"docs/ui-canon/mobile-invariants.md\"}"
+            }
+          },
+          {
+            "id": "chatcmpl-tool-a05833914bd7e864",
+            "type": "function",
+            "function": {
+              "name": "view_file",
+              "arguments": "{\"path\": \"design-system/mobile-app-invariants.json\"}"
+            }
+          }
+        ],
+        "reasoning": "Let's start by reading the relevant files. The user wants to check design-system/ui-visual-surface-contract.json and report the findings. Let's also check the docs and other files.\n\nI'll make parallel calls: viewing the docs file, viewing the contract json, viewing mobile-app-invariants.json.\n"
+      },
+      "logprobs": null,
+      "finish_reason": "tool_calls",
+      "stop_reason": null,
+      "token_ids": null,
+      "routed_experts": null
+    }
+  ],
+  "service_tier": null,
+  "system_fingerprint": "vllm-0.1.dev21504+g57fdda71b.d20260923-tp2-6b0122d8",
+  "usage": {
+    "prompt_tokens": 783,
+    "total_tokens": 967,
+    "completion_tokens": 184,
+    "prompt_tokens_details": null,
+    "completion_tokens_details": {
+      "reasoning_tokens": 64
+    }
+  },
+  "prompt_logprobs": null,
+  "prompt_token_ids": null,
+  "prompt_text": null,
+  "kv_transfer_params": null,
+  "ec_transfer_params": null,
+  "metrics": null
+}

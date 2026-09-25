@@ -1,0 +1,56 @@
+{
+  "id": "775161755f4f446c93dc7b252554a21c",
+  "object": "chat.completion",
+  "created": 1790203142,
+  "model": "qwen3.8-flash-next-nvfp4",
+  "choices": [
+    {
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": "",
+        "reasoning_content": null,
+        "tool_calls": [
+          {
+            "id": "call_cb35d2607888456eb66965c2",
+            "index": 0,
+            "type": "function",
+            "function": {
+              "name": "grep_search",
+              "arguments": "{\"path\": \"design-system/ui-visual-surface-contract.json\", \"query\": \".\"}"
+            }
+          },
+          {
+            "id": "call_f2b5c826f43944d1a2813faf",
+            "index": 1,
+            "type": "function",
+            "function": {
+              "name": "grep_search",
+              "arguments": "{\"path\": \"design-system\", \"query\": \"surface\"}"
+            }
+          }
+        ]
+      },
+      "logprobs": null,
+      "finish_reason": "tool_calls",
+      "matched_stop": null
+    }
+  ],
+  "usage": {
+    "prompt_tokens": 769,
+    "total_tokens": 853,
+    "completion_tokens": 84,
+    "prompt_tokens_details": null,
+    "reasoning_tokens": 0
+  },
+  "metadata": {
+    "weight_version": "default",
+    "weight_versions": [
+      {
+        "version": "default",
+        "start": 0,
+        "end": 84
+      }
+    ]
+  }
+}

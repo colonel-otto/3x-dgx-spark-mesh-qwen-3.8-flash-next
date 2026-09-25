@@ -1,0 +1,15 @@
+--- a/vllm/model_executor/layers/vocab_parallel_embedding.py	2026-09-23 19:36:24.948137663 -0400
++++ b/vllm/model_executor/layers/vocab_parallel_embedding.py	2026-09-01 18:47:44.676497618 -0400
+@@ -261,7 +261,11 @@
+             self.tp_size = get_tensor_model_parallel_world_size()
+         self.tp_rank = tp_rank
+         self.num_embeddings = num_embeddings
+-        self.padding_size = get_virtual_tp_vocab_padding_size(padding_size)
++        _pad = get_virtual_tp_vocab_padding_size(padding_size)
++        if not disable_tp and self.tp_size > 1:
++            import math
++            _pad = math.lcm(_pad, self.tp_size)
++        self.padding_size = _pad
+         self.org_vocab_size = org_num_embeddings or num_embeddings
+         num_added_embeddings = num_embeddings - self.org_vocab_size
+         self.org_vocab_size_padded = pad_vocab_size(

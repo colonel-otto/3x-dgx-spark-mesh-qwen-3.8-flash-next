@@ -1,0 +1,60 @@
+{
+  "id": "chatcmpl-9e1d64ed653dcd59",
+  "object": "chat.completion",
+  "created": 1790214279,
+  "model": "qwen3.8-flash-next-nvfp4",
+  "choices": [
+    {
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": null,
+        "refusal": null,
+        "annotations": null,
+        "audio": null,
+        "function_call": null,
+        "tool_calls": [
+          {
+            "id": "chatcmpl-tool-be7bc59194a6445e",
+            "type": "function",
+            "function": {
+              "name": "grep_search",
+              "arguments": "{\"query\": \"mobile-invariants\"}"
+            }
+          },
+          {
+            "id": "chatcmpl-tool-ad7f267dacfe7cfb",
+            "type": "function",
+            "function": {
+              "name": "grep_search",
+              "arguments": "{\"query\": \"ui-visual-surface-contract\"}"
+            }
+          }
+        ],
+        "reasoning": "Neither file exists. Let me search the filesystem for these files. Maybe the working directory is different, or the repo layout differs.\n\nLet me use grep_search and glob-ish approaches. I only have view_file and grep_search. Let me search for \"mobile-invariants\" across files.\n"
+      },
+      "logprobs": null,
+      "finish_reason": "tool_calls",
+      "stop_reason": null,
+      "token_ids": null,
+      "routed_experts": null
+    }
+  ],
+  "service_tier": null,
+  "system_fingerprint": "vllm-0.1.dev21504+g57fdda71b.d20260923-tp2-690b7eba",
+  "usage": {
+    "prompt_tokens": 963,
+    "total_tokens": 1084,
+    "completion_tokens": 121,
+    "prompt_tokens_details": null,
+    "completion_tokens_details": {
+      "reasoning_tokens": 59
+    }
+  },
+  "prompt_logprobs": null,
+  "prompt_token_ids": null,
+  "prompt_text": null,
+  "kv_transfer_params": null,
+  "ec_transfer_params": null,
+  "metrics": null
+}
