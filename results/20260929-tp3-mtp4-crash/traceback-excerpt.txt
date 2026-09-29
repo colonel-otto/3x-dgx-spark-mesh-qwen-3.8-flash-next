@@ -1,0 +1,57 @@
+(Worker_TP0 pid=278) INFO 09-29 02:44:52 [gpu_worker.py:886] CUDA graph pool memory: 0.45 GiB (actual), 1.37 GiB (estimated), difference: 0.92 GiB (206.3%).
+(Worker_TP0 pid=278) INFO 09-29 02:44:52 [gpu_worker.py:949] Free memory on device (103.78/121.69 GiB) on startup. Desired GPU memory utilization is (0.82, 99.79 GiB). Actual usage is 32.76 GiB for consumed memory (weights + non-torch), 2.8
+WorkerProc hit an exception.
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.12/dist-packages/vllm/v1/executor/multiproc_executor.py", line 1040, in worker_busy_loop
+    output = func(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/dist-packages/vllm/tracing/otel.py", line 178, in sync_wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/dist-packages/vllm/v1/worker/gpu_worker.py", line 955, in compile_or_warm_up_model
+    warmup_kernels(self.model_runner, self.execute_model, self.sample_tokens)
+  File "/usr/local/lib/python3.12/dist-packages/torch/utils/_contextlib.py", line 124, in decorate_context
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/dist-packages/vllm/v1/worker/gpu/warmup.py", line 373, in warmup_kernels
+    worker_sample_tokens(grammar_output)
+  File "/usr/local/lib/python3.12/dist-packages/torch/utils/_contextlib.py", line 124, in decorate_context
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/dist-packages/vllm/v1/worker/gpu_worker.py", line 1184, in sample_tokens
+    return self.model_runner.sample_tokens(grammar_output)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/dist-packages/torch/utils/_contextlib.py", line 124, in decorate_context
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/dist-packages/vllm/v1/worker/gpu/eplb_utils.py", line 27, in wrapper
+    result = fn(self, *args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/dist-packages/vllm/v1/worker/gpu/model_runner.py", line 2232, in sample_tokens
+    draft_tokens = self.speculator.propose(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/dist-packages/torch/utils/_contextlib.py", line 124, in decorate_context
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/dist-packages/vllm/v1/worker/gpu/spec_decode/autoregressive/speculator.py", line 374, in propose
+    self._multi_step_decode(
+  File "/usr/local/lib/python3.12/dist-packages/vllm/v1/worker/gpu/spec_decode/autoregressive/speculator.py", line 543, in _multi_step_decode
+    attn_metadata = self._build_draft_attn_metadata(
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/dist-packages/vllm/v1/worker/gpu/spec_decode/speculator.py", line 335, in _build_draft_attn_metadata
+    attn_metadata = build_attn_metadata(
+                    ^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/dist-packages/vllm/v1/worker/gpu/attn_utils.py", line 683, in build_attn_metadata
+    metadata = attn_metadata_builder.build(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/dist-packages/vllm/v1/attention/backends/flashinfer.py", line 1344, in build
+    seq_lens_cpu = common_attn_metadata.seq_lens_cpu if needs_seq_lens_cpu else None
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/dist-packages/typing_extensions.py", line 3140, in wrapper
+    return arg(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/dist-packages/vllm/v1/attention/backend.py", line 641, in seq_lens_cpu
+    self._seq_lens_cpu = self.seq_lens.to("cpu")
+                         ^^^^^^^^^^^^^^^^^^^^^^^
+torch.AcceleratorError: CUDA error: an illegal memory access was encountered
+Search for `cudaErrorIllegalAddress' in https://docs.nvidia.com/cuda/cuda-runtime-api/group__CUDART__TYPES.html for more information.

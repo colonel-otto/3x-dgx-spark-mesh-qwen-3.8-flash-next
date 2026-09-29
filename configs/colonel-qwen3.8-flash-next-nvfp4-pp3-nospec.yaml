@@ -1,0 +1,80 @@
+# colonel-otto 2026-09-29: PP=3 experiment on the upstream b12x image (bdd4cd9474e8).
+# Derived from colonel-qwen3.8-flash-next-nvfp4-tp2-pinned. TP=1 x PP=3 avoids the
+# dimensions that do not divide by 3 (kv heads 2, experts 512, moe_inter 640, GDN key
+# heads 16, vocab 248320). NCCL HCA comes from -e flags (all four ports), not
+# /etc/nccl-ib-hca, because spark2 has no pin file.
+
+recipe_version: "1"
+name: colonel Qwen3.8-Flash-Next-NVFP4 PP3 (no spec)
+description: PP=3 x TP=1 on 3 Sparks, speculative decoding disabled
+
+model: local-inference-lab/Qwen3.8-Flash-Next-NVFP4
+container: vllm-node-b12x
+
+build_args:
+  - --exp-b12x
+
+cluster_only: true
+
+mods: []
+
+defaults:
+  port: 8100
+  host: 0.0.0.0
+  tensor_parallel: 1
+  pipeline_parallel: 3
+  block_size: 16
+  max_model_len: 262144
+  max_num_seqs: 16
+  max_num_batched_tokens: 8192
+  num_speculative_tokens: 4
+  gpu_memory_utilization: 0.8
+
+env:
+  B12X_ROCE_SPIN_LIMIT: "300000000"
+  VLLM_MXFP8_LM_HEAD: "1"
+  CUTE_DSL_ARCH: "sm_121a"
+  SAFETENSORS_FAST_GPU: "1"
+  VLLM_WORKER_MULTIPROC_METHOD: "spawn"
+  VLLM_SSM_CONV_STATE_LAYOUT: "DS"
+  VLLM_USE_AOT_COMPILE: "1"
+  VLLM_USE_MEGA_AOT_ARTIFACT: "1"
+  VLLM_USE_V2_MODEL_RUNNER: "1"
+  B12X_POLICY_MODE: "auto"
+  VLLM_ENABLE_ROCE_ALLREDUCE: "1"
+  VLLM_ROCE_ALLREDUCE_MAX_SIZE: "2MB"
+
+command: |
+  vllm serve local-inference-lab/Qwen3.8-Flash-Next-NVFP4 \
+    --revision 7c4f1bc1a2d6847e0cbc01ac6b823f00251de8dd \
+    --served-model-name qwen3.8-flash-next-nvfp4 qwen3.8-flash-next local-inference-lab/Qwen3.8-Flash-Next-NVFP4 \
+    --host {host} \
+    --port {port} \
+    --trust-remote-code \
+    --tensor-parallel-size {tensor_parallel} \
+    --pipeline-parallel-size {pipeline_parallel} \
+    --mamba-cache-mode align \
+    --enable-prefix-caching \
+    --enable-chunked-prefill \
+    --max-parallel-prefills 4 \
+    --prefill-policy decode-aware \
+    --decode-refill-target auto \
+    --dtype bfloat16 \
+    --kv-cache-dtype fp8 \
+    --quantization modelopt_mixed \
+    --block-size {block_size} \
+    --load-format b12x \
+    --max-model-len {max_model_len} \
+    --max-num-seqs {max_num_seqs} \
+    --max-num-batched-tokens {max_num_batched_tokens} \
+    --gdn-decode-kernel b12x \
+    --linear-backend b12x \
+    --moe-backend b12x \
+    --no-enable-flashinfer-autotune \
+    --mm-encoder-tp-mode data \
+    --default-chat-template-kwargs '{{"enable_thinking":false}}' \
+    --reasoning-parser qwen3 \
+    --tool-call-parser qwen3_xml \
+    --enable-auto-tool-choice \
+    --compilation-config '{{"pass_config":{{"fuse_act_quant":true}}}}' \
+    --gpu-memory-utilization {gpu_memory_utilization}

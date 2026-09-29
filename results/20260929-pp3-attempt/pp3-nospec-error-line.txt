@@ -1,0 +1,1 @@
+(APIServer pid=66) NotImplementedError: Qwen4Exp N-gram PLE embedding requires pipeline_parallel_size=1 because non-first pipeline ranks do not receive the raw input_ids it needs. Please run with PP=1.

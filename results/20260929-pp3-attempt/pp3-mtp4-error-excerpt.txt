@@ -1,0 +1,15 @@
+(APIServer pid=67)   File "/usr/local/lib/python3.12/dist-packages/vllm/model_executor/models/config.py", line 1011, in verify_and_update_config
+(APIServer pid=67)     raise NotImplementedError(
+(APIServer pid=67) NotImplementedError: Qwen4Exp N-gram PLE embedding requires pipeline_parallel_size=1 because non-first pipeline ranks do not receive the raw input_ids it needs. Please run with PP=1.
+
+Stopping cluster...
+Stopping head node (192.168.10.10)...
+Stopping worker node (192.168.10.11)...
+Stopping worker node (192.168.10.12)...
+Cluster stopped.
+Recipe: colonel Qwen3.8-Flash-Next-NVFP4 PP3 (MTP4)
+  PP=3 x TP=1 on 3 Sparks with MTP 4 speculative tokens
+
+=== Launching ===
+Container: vllm-node-b12x
+Cluster: 3 nodes

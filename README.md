@@ -58,3 +58,10 @@ High-performance deployment, virtual tensor parallel ($TP=3$) sharding, and nati
 ```bash
 ./scripts/qwen-next-sweep.sh 3 8192 ./results/my-sweep
 ```
+
+---
+
+## Status and trial log
+
+See [docs/TRIAL-LOG-2026-09-29.md](docs/TRIAL-LOG-2026-09-29.md) for the 2026-09-29 re-bring-up: TP=2 on the current upstream image (86 tok/s at c=1), TP=3 on the original image (40.9 tok/s), why PP=3 fails, and why 4-token MTP crashes on the TP=3 path.
+
