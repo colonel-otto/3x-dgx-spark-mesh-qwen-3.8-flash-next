@@ -1,0 +1,6 @@
+    self._require_chain_speculation(
+  File "/sgl-workspace/sglang/python/sglang/srt/layers/attention/qwen_sparse_attn_backend.py", line 241, in _require_chain_speculation
+    raise NotImplementedError(
+NotImplementedError: Qwen QSA requires speculative_num_draft_tokens <= the QSA compress ratio (4): the pending index-key ring holds one group; got 6
+
+[2026-09-29 03:46:21] Received sigquit from a child process. It usually means the child failed.
