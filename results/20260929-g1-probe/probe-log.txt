@@ -1,0 +1,44 @@
+[04:31:29] recipe g1-hc0 env:
+  VLLM_ENABLE_ROCE_ALLREDUCE: "1"
+  VLLM_QWEN3_8_FLASH_NEXT_HC_TP: "0"
+[04:31:29] recipe g1-roce0 env:
+  VLLM_ENABLE_ROCE_ALLREDUCE: "0"
+[04:31:29] recipe g1-both env:
+  VLLM_ENABLE_ROCE_ALLREDUCE: "0"
+  VLLM_QWEN3_8_FLASH_NEXT_HC_TP: "0"
+[04:31:29] === ARM hc0: stop everything, launch
+[04:34:55] ARM hc0 serving after ~200s
+[04:34:56] ARM hc0 sanity answer: [391]
+  IDLE_OK start_request_success_total=1.0
+EXCLUSIVITY_PASS delta=155 expected=155
+[04:37:17] ARM hc0 rows:
+nodes	mnbt	c	median_decode_tok_s	agg_tok_s	ttft_ms	decode_min	decode_max
+2	8192	1	86.6	79.4	267	76.7	87.4
+2	8192	4	61.6	212.2	664	53.9	63.9
+2	8192	8	50.0	326.5	1033	42.1	50.2
+2	8192	16	34.1	434.9	1568	31.9	34.6
+[04:37:30] === ARM roce0: stop everything, launch
+[04:40:26] ARM roce0 serving after ~180s
+[04:40:26] ARM roce0 sanity answer: [391]
+  IDLE_OK start_request_success_total=1.0
+EXCLUSIVITY_PASS delta=155 expected=155
+[04:42:52] ARM roce0 rows:
+nodes	mnbt	c	median_decode_tok_s	agg_tok_s	ttft_ms	decode_min	decode_max
+2	8192	1	84.7	81.2	280	81.1	89.2
+2	8192	4	59.4	213.2	700	59.0	62.4
+2	8192	8	45.7	300.9	1080	44.3	46.3
+2	8192	16	31.5	408.4	1650	31.0	31.9
+[04:43:05] === ARM both: stop everything, launch
+[04:46:01] ARM both serving after ~180s
+[04:46:01] ARM both sanity answer: [391]
+  IDLE_OK start_request_success_total=1.0
+EXCLUSIVITY_PASS delta=155 expected=155
+[04:48:17] ARM both rows:
+nodes	mnbt	c	median_decode_tok_s	agg_tok_s	ttft_ms	decode_min	decode_max
+2	8192	1	89.4	82.5	265	87.3	90.2
+2	8192	4	64.3	222.8	667	62.5	65.2
+2	8192	8	50.2	329.3	1033	48.3	50.6
+2	8192	16	34.5	440.3	1580	34.0	34.7
+[04:48:30] === restoring SGLang TP=3 (cg16, 3/4, 600000)
+[04:57:05] SGLang serving again after ~500s
+[04:57:05] G1 DONE

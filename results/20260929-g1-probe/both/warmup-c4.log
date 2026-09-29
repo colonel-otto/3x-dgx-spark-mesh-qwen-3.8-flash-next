@@ -1,0 +1,8 @@
+config: prompt>=256 output_tokens=256 temperature=0.0 top_p=unset seed=1234 concurrency=4 warmup=0 repeat=2
+trial 0: c=4 p=256 median_decode=64.1 tok/s agg=218.0 ttft=677ms prompt_tok=[294-294] n=[256, 256, 256, 256]
+trial 1: c=4 p=256 median_decode=67.1 tok/s agg=228.0 ttft=675ms prompt_tok=[294-294] n=[256, 256, 256, 256]
+
+per-trial decode (sorted): ['64.1', '67.1']
+per-trial agg    (sorted): ['218.0', '228.0']
+FINAL: median-of-trials decode = 65.6 tok/s [min 64.1 max 67.1, spread 4.7%]
+FINAL: median-of-trials agg    = 223.0 tok/s [min 218.0 max 228.0]
