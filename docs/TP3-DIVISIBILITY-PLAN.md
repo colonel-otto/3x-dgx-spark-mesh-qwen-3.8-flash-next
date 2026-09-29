@@ -37,7 +37,8 @@ shards, 98.5 GiB, all 394 tensor patterns enumerated from the shard headers).
 4. **Speed: do not expect a win.** Weight-streaming bound says at most ~+12% per stream; hyper-
    connection weights become replicated (they cannot be sharded 3 ways), attention work per rank does
    not shrink, and comm goes from RoCE one-shot to NCCL ring. Honest single-stream estimate
-   **~ +3% (range -10% .. +15%)** over native TP=2's 86.2 tok/s (our `bench-miaai` number).
+   **~ +2% (range -10% .. +15%)** over native TP=2's 86.2 tok/s (our `bench-miaai` number),
+   i.e. roughly 77 to 99 tok/s.
    KV capacity is not a reason either: the model has only 12 full-attention layers.
 5. **Go/no-go:** run a no-engineering probe first (TP=2 with the two TP=3-forced regressions
    applied, Section 6 step G1). Only build the converter if that probe stays >= ~80 tok/s.
@@ -69,7 +70,7 @@ No dense MLP exists: the shard headers contain no non-expert `mlp.gate_proj/up_p
 | **GDN conv1d** (BF16 `[10240,1,4]`) | q,k,v channels | `[5120,1,4]` | PAD, same row layout as in_proj_qkv | `[11520,1,4]` | `[3840,1,4]` | pad channels zero -> silu(0)=0. |
 | **GDN out_proj** (MXFP8 `[2560,6144]` + scale `[2560,192]`) | Hv48x128 in | `[2560,3072]` | PAD in-dim 6144->6912 | `[2560,6912]`, scale `[2560,216]` | `[2560,2304]` | K per rank 2304 = 18x128, ok for K%128. |
 | GDN `A_log`, `dt_bias` (BF16 `[48]`), norm `[128]` | per v head | `[24]` | PAD 48->54 with **finite 0.0** | `[54]` | `[18]` | finite pad avoids exp overflow in inactive recurrent lanes (GLM lesson, `SHARDED-TP3-CANDIDATE.md`). norm weight replicated. |
-| **Routed experts w13** (NVFP4: gate/up `[640,1280]` U8 packed + scale `[640,160]` F8_E4M3 + per-expert scalar `weight_scale_2`, `input_scale`) x 512 x 48 | I=640 | I=320 (`[640,1280]` fused) | **PAD I 640->768** | gate/up `[768,1280]`, scale `[768,160]` | I=256 (`[512,1280]` fused) | silu(0)*0=0. Per-rank 256 = 16 NVFP4 groups/row... 256 is a multiple of 64 (vLLM pads gated NVFP4 to 64 at `vllm/model_executor/layers/quantization/utils/b12x_moe.py:33`) and of 128 (b12x has a special n64 repack path for `I%128==64`, which TP=2's 320 uses; 256 is the plain path) [V]. [V-CPU] 3-way partial sums == unpadded, rel err 8e-7. |
+| **Routed experts w13** (NVFP4: gate/up `[640,1280]` U8 packed + scale `[640,160]` F8_E4M3 + per-expert scalar `weight_scale_2`, `input_scale`) x 512 x 48 | I=640 | I=320 (`[640,1280]` fused) | **PAD I 640->768** | gate/up `[768,1280]`, scale `[768,160]` | I=256 (`[512,1280]` fused) | silu(0)*0=0. Per-rank width 256 is a multiple of 16 (NVFP4 group), of 64 (vLLM pads gated NVFP4 to 64 at `vllm/model_executor/layers/quantization/utils/b12x_moe.py:33`) and of 128 (b12x has a special n64 repack path for `I%128==64`, which TP=2's 320 uses; 256 is the plain path) [V]. [V-CPU] 3-way partial sums == unpadded, rel err 8e-7. |
 | **Routed experts w2** (down `[2560,320]` U8 + scale `[2560,40]`) | I=640 | `[2560,160]` | PAD in-dim I 640->768 | `[2560,384]`, scale `[2560,48]` | `[2560,128]`, scale `[2560,16]` | pad columns zero (packed 2 fp4/byte -> 128 zero bytes per row). |
 | NVFP4 scale tensors for the pad region | | | fill **0x00** (E4M3 +0) | | | Matches vLLM's own auto-pad (`F.pad` zeros, `b12x_moe.py:37-48`). Weight nibbles 0 x any finite scale = exactly 0 (also true for 0x38=1.0, tested). Padding is done on disk, so it precedes `swizzle_blockscale` (`b12x_moe.py:98,107`; the code raises if padding is needed after, line 102). Per-rank swizzle tiles: w13 scale rows 512 = 4x128 tiles, w2 scale cols 16 = 4x4. `weight_scale_2` and `input_scale` (scalars per expert/projection) are untouched. |
 | **Shared expert** (MXFP8 gate/up `[640,2560]` + scale `[640,80]` U8; down `[2560,640]` + scale `[2560,20]`) | I=640 | I=320 | **PAD I 640->768** | gate/up `[768,2560]`, scale `[768,80]`; down `[2560,768]`, scale `[2560,24]` | I=256 | Native vLLM has a "replicate misaligned shared expert" path (`vllm/model_executor/models/qwen3_next.py:96-125,161`) but it only fires for Quark MX configs (`group_size` comes from Quark), so under `modelopt_mixed` it is inactive [V]. Fallback if pad misbehaves: force `replicate_shared_expert=True` (0.23 GiB replicated, +~0.6 ms/step of redundant streaming [I]). |
@@ -101,7 +102,7 @@ only, BHCC learned this the hard way), so the config edit must be on disk in the
 ### 1.3 Why GDN must be PAD (verified kernel contracts)
 
 - `vllm/model_executor/layers/mamba/gdn/qwen_gdn_linear_attn.py:354-367`: with b12x selected (default for
-  `qwen4_exp_text` when `moe_backend` or `linear_backend` is b12x, `:307-317`), the layer raises
+  `qwen4_exp_text` when `moe_backend` or `linear_backend` is b12x, `:310-320`), the layer raises
   `ValueError("b12x GDN prefill requires SM12x, BF16, 128-wide heads, and V:K heads=3:1")` unless
   `linear_num_value_heads == 3 * linear_num_key_heads` **on the global config** [V].
   Also `b12x/sequence/gdn_prefill/_impl.py:54-55`. Decode only needs `Hv % Hk == 0`
@@ -123,7 +124,7 @@ only, BHCC learned this the hard way), so the config edit must be on disk in the
 | Full-attn (non-b12x) | `qsa.py:207-221` | heads 36%3, kv 3>=3 and 3%3 | ok |
 | Full-attn (b12x, production path) | `b12x_qsa.py:903-912` | same | ok |
 | GDN state shape | `mamba_utils.py:274-295`, `model.py:787-801` | divide(conv_dim=11520,3), divide(54,3) | ok |
-| GDN layer | `qwen_gdn_linear_attn.py:735-743,841-842` | divide(54,3), divide(18,3) | ok |
+| GDN layer | `qwen_gdn_linear_attn.py:735-743,841-842` (`gdn_prefill` 3:1 check `:354-367`) | divide(54,3), divide(18,3) | ok |
 | MoE / shared expert | `qwen3_next.py:217-237`, FusedMoE | 768/3, `_should_replicate...` inactive | ok |
 | b12x MoE alignment | `b12x_moe.py:33` | round_up(256,64)=256, no extra pad | ok |
 | HC workspace | `hyperconnection.py:207-216` | falls back to replicated | ok (cost, see 3) |
@@ -147,16 +148,16 @@ PLAN-H (variant worth an A/B later) = attention COPY + GDN PAD.
 | Checkpoint on disk (GiB) | 98.5 | ~112 | ~112 | ~112 |
 | KV bytes per token per rank, 12 full-attn layers, fp8 (prod recipe) | 6 KiB | **6 KiB** | 12 KiB | 12 KiB |
 | KV bytes per token per rank if BF16 | 12 KiB | 12 KiB | 24 KiB | 24 KiB |
-| KV tokens (illustrative: 0.7 x 121 GiB budget, 15 GiB overhead assumed [I], fp8) | ~2.8 M | ~4.3 M | ~2.4 M | ~2.4 M |
-| Attention weights read per rank per layer (MB) | 24.9 | 24.9 | 18.9 | 18.9 |
+| KV tokens (illustrative [I]: 0.7 x 121 GiB budget, 15 GiB non-weight overhead and 0.75 KiB/token indexer cache assumed, fp8) | ~3.1 M | ~4.8 M | ~2.6 M | ~2.6 M |
+| Attention weights read per rank per layer (MB) | 24.9 | 24.9 | 18.4 | 18.4 |
 | QSA kv gather bytes per rank (relative) | 1.0 | 1.0 | 2.0 | 2.0 |
 | Idle attention rank | none | **rank 2 does all-zero attention (1/3 of attention lanes wasted)** | none | none |
-| GDN weights read per rank per layer (MB) | 28.8 | **21.6** (0.75x) | 27.5 (0.95x) | 21.6 |
+| GDN weights read per rank per layer (MB) | 29.0 | **21.7** (0.75x) | 26.3 (0.91x) | 21.7 |
 | GDN state per sequence per rank (36 layers) | ~55 MiB | ~41 MiB | ~41 MiB (state depends on Hv only) | ~41 MiB |
 | MoE weights read per rank per layer (I) | 320 | 256 (0.8x) | 256 | 256 |
 | All-reduce payload per layer | 2 x T x 2560 x 2 B | identical (2 x T x 5 KiB) | identical | identical |
 | Ring all-reduce factor 2(P-1)/P; steps | 1.0; 2 | 1.33; 4 | 1.33; 4 | 1.33; 4 |
-| FLOPs per rank per token (GFLOP, decode/prefill GEMM only, excl. lm_head) | 5.9 | **5.5** | ~5.6 | ~5.4 |
+| FLOPs per rank per token (GFLOP, decode/prefill GEMM only, excl. lm_head) | 5.9 | **5.5** | ~5.6 | ~5.3 |
 | Conversion work | n/a | q/k/v/o + GDN (5 proj + conv + A/dt) + experts + shared + PLE trim | k/v(+scale) x3, GDN q/k x3 (+scale), experts, shared, PLE trim | k/v x3, GDN pad, experts, shared, PLE |
 
 FLOPs per token (GFLOP): experts 4.7, GDN 4.1, full-attn 1.2, shared 0.47, HC 1.28 (replicated at TP=3),
@@ -212,7 +213,7 @@ the ratio would be 0.81, but it cannot (hidden 2560 and low-rank 320 are both no
 | **Total step time vs TP=2** | 1.00 | **0.87 / 0.98 / 1.12** | |
 
 Speedup: **+15% optimistic, +2% central, -10% pessimistic**. Applied to native TP=2's 86.2 tok/s
-(`bench-miaai`, c=1): **~76 .. 99 tok/s, central ~88**.
+(`bench-miaai`, c=1): **~77 .. 99 tok/s, central ~88**.
 
 Anchors: (a) the 3.1 bound (+12% max); (b) the only measured 3-vs-2 on this model, SGLang padded
 TP=3 vs TP=2 at c=1, +14% (75.7 vs 66.5), c=16 aggregate +33% (383 vs 289) -
@@ -395,7 +396,7 @@ All runnable with `docker run --rm --memory 8g --cpus 4 --entrypoint python3 -v 
 | Step | Action | Cost | Go criterion |
 |---|---|---|---|
 | G0 | CPU exactness (T-A) - **done, all pass** | 0 | met |
-| **G1** | **No-build probe on the production stack, TP=2, same harness:** run with `VLLM_QWEN3_8_FLASH_NEXT_HC_TP=0` (HC replicated, as TP=3 will force) and with `VLLM_ENABLE_ROCE_ALLREDUCE=0` (NCCL). Median of 5 at c=1 plus c=16 aggregate. | 1-2 cluster hours, 2 nodes, no code | If both together stay >= ~80 tok/s (i.e. within ~7% of 86.2), TP=3 has headroom to at least tie. If < 70, stop: **NO-GO**. Per-variable results also tell which regression to attack (HC MXFP8 mixers, per-peer RoCE). |
+| **G1** | **No-build probe on the production stack, TP=2, same harness:** run with `VLLM_QWEN3_8_FLASH_NEXT_HC_TP=0` (HC replicated, as TP=3 will force) and with `VLLM_ENABLE_ROCE_ALLREDUCE=0` (NCCL). Median of 5 at c=1 plus c=16 aggregate. | 1-2 cluster hours, 2 nodes, no code | If both together stay >= ~80 tok/s (i.e. within ~7% of 86.2), TP=3 has headroom to at least tie. If < 70, stop: **NO-GO**. Per-variable results also tell which regression to attack (HC MXFP8 mixers, per-peer RoCE). Caveat: 2-rank NCCL is faster than the 3-rank ring TP=3 will use, so this probe is slightly optimistic on comm. |
 | G2 | Write converter + T-B/T-C/T-D/T-E (CPU) | ~1 day | all pass on real headers |
 | G3 | Convert on one node with the cluster quiet, hash-audit, `rsync` to the other two | ~1 h I/O | hashes match |
 | G4 | T-G one-layer GPU checks (I=256 MoE with NaN-poisoned tails, N=36 MXFP8 GEMM, QSA (12,1) zero kv head) on one GPU | ~2 h | no NaN, rel err <= TP=2 kernel noise |
